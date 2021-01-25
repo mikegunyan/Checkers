@@ -1,0 +1,46 @@
+body {
+  background-color: aqua;
+}
+
+.head {
+  display: grid;
+  margin: auto;
+  text-align: center;
+  grid-template-columns: auto auto auto;
+  width: 300px;
+  font-size: 40px;
+}
+.grid {
+  display: grid;
+  margin: auto;
+  grid-template-columns: auto auto auto auto auto auto auto auto;
+  width: fit-content;
+}
+.piece {
+  max-width: 50px;
+  max-height: 50px;
+  margin: 25px;
+}
+.a0, .a2, .a4, .a6, .b1, .b3, .b5, .b7, .c0, .c2, .c4, .c6, .d1, .d3, .d5, .d7, .e0, .e2, .e4, .e6, .f1, .f3, .f5, .f7, .g0, .g2, .g4, .g6, .h1, .h3, .h5, .h7 {
+  background-color: red;
+  font-size: 30px;
+  height: 50px;
+  width: 50px;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.blackSquare {
+  background-color: black;
+  font-size: 30px;
+  height: 50px;
+  width: 50px;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.selectedSquare {
+  background-color: darkred;
+}
