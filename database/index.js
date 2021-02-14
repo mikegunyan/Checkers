@@ -8,6 +8,7 @@ const db = mongoose.connect('mongodb://localhost/boardlist', { useNewUrlParser: 
 
 const schema = new mongoose.Schema({
   board: Array,
+  turn: String,
 });
 
 const Board = mongoose.model('Board', schema);

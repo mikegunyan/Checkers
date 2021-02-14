@@ -12,10 +12,13 @@ class App extends React.Component {
       red: 12,
       selected: [],
       turn: 'black',
+      autoJumpRed: true,
+      autoJumpBlack: false,
     };
     this.makeBoard = this.makeBoard.bind(this);
     this.moveSelected = this.moveSelected.bind(this);
     this.resetRed = this.resetRed.bind(this);
+    this.resetRedJump = this.resetRedJump.bind(this);
     this.selectRed = this.selectRed.bind(this);
     this.resetBlack = this.resetBlack.bind(this);
     this.selectBlack = this.selectBlack.bind(this);
@@ -28,13 +31,13 @@ class App extends React.Component {
   makeBoard() {
     axios.get('/boards')
       .then((data) => {
-        this.setState({ board: data.data[0].board })
+        this.setState({ board: data.data[1].board, turn: data.data[1].turn })
       })
   }
 
   moveSelected(event) {
     const target = event.target.getAttribute('name');
-    const { board, selected } = this.state;
+    const { board, selected, turn, autoJumpBlack, autoJumpRed } = this.state;
     const columns = Number(target.charAt(1));
     const rows = Number(target.charAt(0));
     const to = board[rows][columns];
@@ -44,57 +47,150 @@ class App extends React.Component {
     board[rows][columns][1] = 'redSquare';
     board[selected[0]][selected[1]][2] = '';
     this.resetRed();
+    if (turn === 'black') {
+      this.setState({ turn: 'red', autoJumpBlack: false });
+      for (let row = 0; row < board.length; row ++) {
+        for (let column = 0; column < board[row].length; column++) {
+          if (board[row][column][0] === 'x' || board[row][column][0] === 'X') {
+            if (board[row][column][0] === 'X') {
+              if ((row > 0 && column > 0 && board[row - 1][column - 1][0] === 'o' && board[row - 2][column - 2][0] === null)
+                || (row > 0 && column > 0 && board[row - 1][column - 1][0] === 'O' && board[row - 2][column - 2][0] === null)
+                || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'o' && board[row - 2][column + 2][0] === null)
+                || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'O' && board[row - 2][column + 2][0] === null)) {
+                  this.setState({ autoJumpRed: true });
+                break;
+              }
+            }
+            if ((row < 7 && column > 0 && board[row + 1][column - 1][0] === 'o' && board[row + 2][column - 2][0] === null)
+              || (row < 7 && column > 0 && board[row + 1][column - 1][0] === 'O' && board[row + 2][column - 2][0] === null)
+              || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'o' && board[row + 2][column + 2][0] === null)
+              || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'O' && board[row + 2][column + 2][0] === null)) {
+                this.setState({ autoJumpRed: true });
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      this.setState({ turn: 'black', autoJumpRed: false });
+      for (let row = 0; row < board.length; row ++) {
+        for (let column = 0; column < board[row].length; column++) {
+          if (board[row][column][0] === 'o' || board[row][column][0] === 'O') {
+            if (board[row][column][0] === 'O') {
+              if ((row < 7 && column > 0 && board[row + 1][column - 1][0] === 'X' && board[row + 2][column - 2][0] === null)
+              || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'x' && board[row + 2][column + 2][0] === null)) {
+                this.setState({ autoJumpBlack: true });
+                break;
+              }
+            }
+            if ((row > 0 && column > 0 && board[row - 1][column - 1][0] === 'x' && board[row - 2][column - 2][0] === null)
+              || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'x' && board[row - 2][column + 2][0] === null)) {
+                console.log(turn)
+                this.setState({ autoJumpBlack: true });
+              break;
+            }
+          }
+        }
+      }
+    }
   }
 
   resetRed() {
     const { board, selected } = this.state;
     board[selected[0]][selected[1]][1] = 'redSquare';
-    if (selected[0] > 0 && selected[1] > 0 && board[selected[0] - 1][selected[1] - 1] !== undefined  && board[selected[0] - 1][selected[1] - 1][0] === null) {
+    if (selected[0] > 0 && selected[1] > 0 && board[selected[0] - 1][selected[1] - 1] !== undefined  && (board[selected[0] - 1][selected[1] - 1][0] === null || board[selected[0] - 1][selected[1] - 1][0] === 'o' || board[selected[0] - 1][selected[1] - 1][0] === 'O')) {
       board[selected[0] - 1][selected[1] - 1][1] = 'redSquare';
       board[selected[0] - 1][selected[1] - 1][2] = '';
     }
-    if (selected[0] > 0 && selected[1] < 7 && board[selected[0] - 1][selected[1] + 1] !== undefined  && board[selected[0] - 1][selected[1] + 1][0] === null) {
+    if (selected[0] > 0 && selected[1] < 7 && board[selected[0] - 1][selected[1] + 1] !== undefined  && (board[selected[0] - 1][selected[1] + 1][0] === null || board[selected[0] - 1][selected[1] + 1][0] === 'o' || board[selected[0] - 1][selected[1] + 1][0] === 'O')) {
       board[selected[0] - 1][selected[1] + 1][1] = 'redSquare';
       board[selected[0] - 1][selected[1] + 1][2] = '';
     }
-    if (selected[0] < 7 && selected[1] > 0 && board[selected[0] + 1][selected[1] - 1] !== undefined  && board[selected[0] + 1][selected[1] - 1][0] === null) {
+    if (selected[0] < 7 && selected[1] > 0 && board[selected[0] + 1][selected[1] - 1] !== undefined  && (board[selected[0] + 1][selected[1] - 1][0] === null || board[selected[0] + 1][selected[1] - 1][0] === 'o' || board[selected[0] + 1][selected[1] - 1][0] === 'O')) {
       board[selected[0] + 1][selected[1] - 1][1] = 'redSquare';
       board[selected[0] + 1][selected[1] - 1][2] = '';
     }
-    if (selected[0] < 7 && selected[1] < 7 && board[selected[0] + 1][selected[1] + 1] !== undefined  && board[selected[0] + 1][selected[1] + 1][0] === null) {
+    if (selected[0] < 7 && selected[1] < 7 && board[selected[0] + 1][selected[1] + 1] !== undefined  && (board[selected[0] + 1][selected[1] + 1][0] === null || board[selected[0] + 1][selected[1] + 1][0] === 'o' || board[selected[0] + 1][selected[1] + 1][0] === 'O')) {
       board[selected[0] + 1][selected[1] + 1][1] = 'redSquare';
       board[selected[0] + 1][selected[1] + 1][2] = '';
     }
     this.setState({ selected: [] })
   }
 
+  resetRedJump() {
+    const { board, selected } = this.state;
+    board[selected[0]][selected[1]][1] = 'redSquare';
+    if (selected[0] > 1 && selected[1] > 1 && board[selected[0] - 2][selected[1] - 2] !== undefined  && (board[selected[0] - 2][selected[1] - 2][0] === null || board[selected[0] - 1][selected[1] - 1][0] === 'o' || board[selected[0] - 1][selected[1] - 1][0] === 'O')) {
+      board[selected[0] - 2][selected[1] - 2][1] = 'redSquare';
+      board[selected[0] - 2][selected[1] - 2][2] = '';
+    }
+    if (selected[0] > 1 && selected[1] < 6 && board[selected[0] - 2][selected[1] + 2] !== undefined  && (board[selected[0] - 2][selected[1] + 2][0] === null || board[selected[0] - 1][selected[1] + 1][0] === 'o' || board[selected[0] - 1][selected[1] + 1][0] === 'O')) {
+      board[selected[0] - 2][selected[1] + 2][1] = 'redSquare';
+      board[selected[0] - 2][selected[1] + 2][2] = '';
+    }
+    if (selected[0] < 6 && selected[1] > 1 && board[selected[0] + 2][selected[1] - 2] !== undefined  && (board[selected[0] + 2][selected[1] - 2][0] === null || board[selected[0] + 1][selected[1] - 1][0] === 'o' || board[selected[0] + 1][selected[1] - 1][0] === 'O')) {
+      board[selected[0] + 2][selected[1] - 2][1] = 'redSquare';
+      board[selected[0] + 2][selected[1] - 2][2] = '';
+    }
+    if (selected[0] < 6 && selected[1] < 6 && board[selected[0] + 2][selected[1] + 2] !== undefined  && (board[selected[0] + 2][selected[1] + 2][0] === null || board[selected[0] + 1][selected[1] + 1][0] === 'o' || board[selected[0] + 1][selected[1] + 1][0] === 'O')) {
+      board[selected[0] + 2][selected[1] + 2][1] = 'redSquare';
+      board[selected[0] + 2][selected[1] + 2][2] = '';
+    }
+    this.setState({ selected: [] })
+  }
+
   selectRed(event) {
-    const { board, selected, turn } = this.state;
+    const { board, selected, turn, autoJumpRed } = this.state;
     if (turn === 'red') {
       const target = event.target.getAttribute('name');
       const columns = Number(target.charAt(1));
       const rows = Number(target.charAt(0));
-      if (selected.length > 0) {
-        this.resetRed();
+      if (autoJumpRed) {
+        if (selected.length > 0) {
+          this.resetRedJump();
+        } else {
+          board[rows][columns][1] = 'selectedPiece';
+          if (rows > 1 && columns > 1 && board[rows - 2][columns - 2] !== undefined && board[rows - 2][columns - 2][0] === null && board[rows][columns][0] === 'X' && (board[rows - 1][columns - 1][0] === 'o' || board[rows - 1][columns - 1][0] === 'O')) {
+            board[rows - 2][columns - 2][1] = 'selectedSquare';
+            board[rows - 2][columns - 2][2] = 'moveSelected';
+          }
+          if (rows > 1 && columns < 6 && board[rows - 2][columns + 2] !== undefined && board[rows - 2][columns + 2][0] === null && board[rows][columns][0] === 'X' && (board[rows - 1][columns + 1][0] === 'o' || board[rows - 1][columns + 1][0] === 'O')) {
+            board[rows - 2][columns + 2][1] = 'selectedSquare';
+            board[rows - 2][columns + 2][2] = 'moveSelected';
+          }
+          if (rows < 6 && columns > 1 && board[rows + 2][columns - 2] !== undefined && board[rows + 2][columns - 2][0] === null && (board[rows + 1][columns - 1][0] === 'o' || board[rows + 1][columns - 1][0] === 'O')) {
+            board[rows + 2][columns - 2][1] = 'selectedSquare';
+            board[rows + 2][columns - 2][2] = 'moveSelected';
+          }
+          if (rows < 6 && columns < 6 && board[rows + 2][columns + 2] !== undefined && board[rows + 2][columns + 2][0] === null && (board[rows + 1][columns + 1][0] === 'o' || board[rows + 1][columns + 1][0] === 'O')) {
+            board[rows + 2][columns + 2][1] = 'selectedSquare';
+            board[rows + 2][columns + 2][2] = 'moveSelected';
+          }
+          this.setState({ selected: [rows, columns] })
+        }
       } else {
-        board[rows][columns][1] = 'selectedPiece';
-        if (rows > 0 && columns > 0 && board[rows - 1][columns - 1] !== undefined  && board[rows - 1][columns - 1][0] === null  && board[rows][columns][0] === 'X') {
-          board[rows - 1][columns - 1][1] = 'selectedSquare';
-          board[rows - 1][columns - 1][2] = 'moveSelected';
+        if (selected.length > 0) {
+          this.resetRed();
+        } else {
+          board[rows][columns][1] = 'selectedPiece';
+          if (rows > 0 && columns > 0 && board[rows - 1][columns - 1] !== undefined && board[rows - 1][columns - 1][0] === null  && board[rows][columns][0] === 'X') {
+            board[rows - 1][columns - 1][1] = 'selectedSquare';
+            board[rows - 1][columns - 1][2] = 'moveSelected';
+          }
+          if (rows > 0 && columns < 7 && board[rows - 1][columns + 1] !== undefined && board[rows - 1][columns + 1][0] === null  && board[rows][columns][0] === 'X') {
+            board[rows - 1][columns + 1][1] = 'selectedSquare';
+            board[rows - 1][columns + 1][2] = 'moveSelected';
+          }
+          if (rows < 7 && columns > 0 && board[rows + 1][columns - 1] !== undefined && board[rows + 1][columns - 1][0] === null) {
+            board[rows + 1][columns - 1][1] = 'selectedSquare';
+            board[rows + 1][columns - 1][2] = 'moveSelected';
+          }
+          if (rows < 7 && columns < 7 && board[rows + 1][columns + 1] !== undefined && board[rows + 1][columns + 1][0] === null) {
+            board[rows + 1][columns + 1][1] = 'selectedSquare';
+            board[rows + 1][columns + 1][2] = 'moveSelected';
+          }
+          this.setState({ selected: [rows, columns] })
         }
-        if (rows > 0 && columns < 7 && board[rows - 1][columns + 1] !== undefined  && board[rows - 1][columns + 1][0] === null  && board[rows][columns][0] === 'X') {
-          board[rows - 1][columns + 1][1] = 'selectedSquare';
-          board[rows - 1][columns + 1][2] = 'moveSelected';
-        }
-        if (rows < 7 && columns > 0 && board[rows + 1][columns - 1] !== undefined  && board[rows + 1][columns - 1][0] === null) {
-          board[rows + 1][columns - 1][1] = 'selectedSquare';
-          board[rows + 1][columns - 1][2] = 'moveSelected';
-        }
-        if (rows < 7 && columns < 7 && board[rows + 1][columns + 1] !== undefined  && board[rows + 1][columns + 1][0] === null) {
-          board[rows + 1][columns + 1][1] = 'selectedSquare';
-          board[rows + 1][columns + 1][2] = 'moveSelected';
-        }
-        this.setState({ selected: [rows, columns] })
       }
     }
   }
@@ -131,19 +227,19 @@ class App extends React.Component {
         this.resetBlack();
       } else {
         board[rows][columns][1] = 'selectedPiece';
-        if (rows > 0 && columns > 0 && board[rows - 1][columns - 1] !== undefined  && board[rows - 1][columns - 1][0] === null) {
+        if (rows > 0 && columns > 0 && board[rows - 1][columns - 1] !== undefined && board[rows - 1][columns - 1][0] === null) {
           board[rows - 1][columns - 1][1] = 'selectedSquare';
           board[rows - 1][columns - 1][2] = 'moveSelected';
         }
-        if (rows > 0 && columns < 7 && board[rows - 1][columns + 1] !== undefined  && board[rows - 1][columns + 1][0] === null) {
+        if (rows > 0 && columns < 7 && board[rows - 1][columns + 1] !== undefined && board[rows - 1][columns + 1][0] === null) {
           board[rows - 1][columns + 1][1] = 'selectedSquare';
           board[rows - 1][columns + 1][2] = 'moveSelected';
         }
-        if (rows < 7 && columns > 0 && board[rows + 1][columns - 1] !== undefined  && board[rows + 1][columns - 1][0] === null  && board[rows][columns][0] === 'O') {
+        if (rows < 7 && columns > 0 && board[rows + 1][columns - 1] !== undefined && board[rows + 1][columns - 1][0] === null  && board[rows][columns][0] === 'O') {
           board[rows + 1][columns - 1][1] = 'selectedSquare';
           board[rows + 1][columns - 1][2] = 'moveSelected';
         }
-        if (rows < 7 && columns < 7 && board[rows + 1][columns + 1] !== undefined  && board[rows + 1][columns + 1][0] === null  && board[rows][columns][0] === 'O') {
+        if (rows < 7 && columns < 7 && board[rows + 1][columns + 1] !== undefined && board[rows + 1][columns + 1][0] === null  && board[rows][columns][0] === 'O') {
           board[rows + 1][columns + 1][1] = 'selectedSquare';
           board[rows + 1][columns + 1][2] = 'moveSelected';
         }
@@ -153,7 +249,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { board } = this.state;
+    const { board, turn } = this.state;
     const whichPiece = (square, index, i) => {
       if (square[0] === null) {
         return null;
