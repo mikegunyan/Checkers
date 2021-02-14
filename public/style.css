@@ -21,7 +21,7 @@ body {
   max-height: 50px;
   margin: 25px;
 }
-.a0, .a2, .a4, .a6, .b1, .b3, .b5, .b7, .c0, .c2, .c4, .c6, .d1, .d3, .d5, .d7, .e0, .e2, .e4, .e6, .f1, .f3, .f5, .f7, .g0, .g2, .g4, .g6, .h1, .h3, .h5, .h7 {
+.redSquare {
   background-color: red;
   font-size: 30px;
   height: 50px;
@@ -43,4 +43,23 @@ body {
 }
 .selectedSquare {
   background-color: darkred;
+  font-size: 30px;
+  height: 50px;
+  width: 50px;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.selectedPiece {
+  background-color: red;
+  transform: scale(1.2);
+  border-radius: 25px;
+  font-size: 30px;
+  height: 50px;
+  width: 50px;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

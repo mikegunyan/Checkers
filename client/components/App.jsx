@@ -10,10 +10,15 @@ class App extends React.Component {
       board: [],
       black: 12,
       red: 12,
+      selected: [],
+      turn: 'black',
     };
     this.makeBoard = this.makeBoard.bind(this);
-    this.moveRed = this.moveRed.bind(this);
-    this.whichSquare = this.whichSquare.bind(this);
+    this.moveSelected = this.moveSelected.bind(this);
+    this.resetRed = this.resetRed.bind(this);
+    this.selectRed = this.selectRed.bind(this);
+    this.resetBlack = this.resetBlack.bind(this);
+    this.selectBlack = this.selectBlack.bind(this);
   }
 
   componentDidMount() {
@@ -27,64 +32,138 @@ class App extends React.Component {
       })
   }
 
-  whichSquare(index, i) {
-    if (index % 2 === 0) {
-      if (i % 2 !== 0) {
-        return 'blackSquare';
+  moveSelected(event) {
+    const target = event.target.getAttribute('name');
+    const { board, selected } = this.state;
+    const columns = Number(target.charAt(1));
+    const rows = Number(target.charAt(0));
+    const to = board[rows][columns];
+    const from = board[selected[0]][selected[1]];
+    board[rows][columns] = from;
+    board[selected[0]][selected[1]] = to;
+    board[rows][columns][1] = 'redSquare';
+    board[selected[0]][selected[1]][2] = '';
+    this.resetRed();
+  }
+
+  resetRed() {
+    const { board, selected } = this.state;
+    board[selected[0]][selected[1]][1] = 'redSquare';
+    if (selected[0] > 0 && selected[1] > 0 && board[selected[0] - 1][selected[1] - 1] !== undefined  && board[selected[0] - 1][selected[1] - 1][0] === null) {
+      board[selected[0] - 1][selected[1] - 1][1] = 'redSquare';
+      board[selected[0] - 1][selected[1] - 1][2] = '';
+    }
+    if (selected[0] > 0 && selected[1] < 7 && board[selected[0] - 1][selected[1] + 1] !== undefined  && board[selected[0] - 1][selected[1] + 1][0] === null) {
+      board[selected[0] - 1][selected[1] + 1][1] = 'redSquare';
+      board[selected[0] - 1][selected[1] + 1][2] = '';
+    }
+    if (selected[0] < 7 && selected[1] > 0 && board[selected[0] + 1][selected[1] - 1] !== undefined  && board[selected[0] + 1][selected[1] - 1][0] === null) {
+      board[selected[0] + 1][selected[1] - 1][1] = 'redSquare';
+      board[selected[0] + 1][selected[1] - 1][2] = '';
+    }
+    if (selected[0] < 7 && selected[1] < 7 && board[selected[0] + 1][selected[1] + 1] !== undefined  && board[selected[0] + 1][selected[1] + 1][0] === null) {
+      board[selected[0] + 1][selected[1] + 1][1] = 'redSquare';
+      board[selected[0] + 1][selected[1] + 1][2] = '';
+    }
+    this.setState({ selected: [] })
+  }
+
+  selectRed(event) {
+    const { board, selected, turn } = this.state;
+    if (turn === 'red') {
+      const target = event.target.getAttribute('name');
+      const columns = Number(target.charAt(1));
+      const rows = Number(target.charAt(0));
+      if (selected.length > 0) {
+        this.resetRed();
+      } else {
+        board[rows][columns][1] = 'selectedPiece';
+        if (rows > 0 && columns > 0 && board[rows - 1][columns - 1] !== undefined  && board[rows - 1][columns - 1][0] === null  && board[rows][columns][0] === 'X') {
+          board[rows - 1][columns - 1][1] = 'selectedSquare';
+          board[rows - 1][columns - 1][2] = 'moveSelected';
+        }
+        if (rows > 0 && columns < 7 && board[rows - 1][columns + 1] !== undefined  && board[rows - 1][columns + 1][0] === null  && board[rows][columns][0] === 'X') {
+          board[rows - 1][columns + 1][1] = 'selectedSquare';
+          board[rows - 1][columns + 1][2] = 'moveSelected';
+        }
+        if (rows < 7 && columns > 0 && board[rows + 1][columns - 1] !== undefined  && board[rows + 1][columns - 1][0] === null) {
+          board[rows + 1][columns - 1][1] = 'selectedSquare';
+          board[rows + 1][columns - 1][2] = 'moveSelected';
+        }
+        if (rows < 7 && columns < 7 && board[rows + 1][columns + 1] !== undefined  && board[rows + 1][columns + 1][0] === null) {
+          board[rows + 1][columns + 1][1] = 'selectedSquare';
+          board[rows + 1][columns + 1][2] = 'moveSelected';
+        }
+        this.setState({ selected: [rows, columns] })
       }
-      const row = index === 0 ? 'a' : index === 1 ? 'b' : index === 2 ? 'c' : index === 3 ? 'd' : index === 4 ? 'e' : index === 5 ? 'f' : index === 6 ? 'g' : index === 7 ? 'h' : null;
-      return row + i;
-    } else {
-      if (i % 2 === 0) {
-        return 'blackSquare';
-      }
-      const row = index === 0 ? 'a' : index === 1 ? 'b' : index === 2 ? 'c' : index === 3 ? 'd' : index === 4 ? 'e' : index === 5 ? 'f' : index === 6 ? 'g' : index === 7 ? 'h' : null;
-      return row + i;
     }
   }
 
-  moveRed(event) {
-    const { board } = this.state;
-    if (event.target.name) {
-      const data = JSON.parse(event.target.name)
-      let topLeft, topRight, bottomLeft, bottonRight;
-      const piece = this.whichSquare(data[2], data[3]);
-      if (data[2] > 0 && data[3] > 0) {
-        topLeft = this.whichSquare(data[2] - 1, data[3] - 1);
-        document.body.getElementsByClassName(topLeft)[0].setAttribute
-      ('style', 'filter: brightness(50%);');
-      }
-      if (data[2] > 0 && data[3] < 7) {
-        topRight = this.whichSquare(data[2] - 1, data[3] - 1);
-        document.body.getElementsByClassName(topRight)[0].setAttribute
-      ('style', 'filter: brightness(50%);');
-      }
-      if (data[2] < 7 && data[3] > 0) {
-        bottomLeft = this.whichSquare(data[2] - 1, data[3] - 1);
-        document.body.getElementsByClassName(bottomLeft)[0].setAttribute
-      ('style', 'filter: brightness(50%);');
-      }
-      if (data[2] < 7 && data[3] < 7) {
-        bottonRight = this.whichSquare(data[2] - 1, data[3] - 1);
-        document.body.getElementsByClassName(bottonRight)[0].setAttribute
-      ('style', 'filter: brightness(50%);');
+  resetBlack() {
+    const { board, selected } = this.state;
+    board[selected[0]][selected[1]][1] = 'redSquare';
+    if (selected[0] > 0 && selected[1] > 0 && board[selected[0] - 1][selected[1] - 1] !== undefined  && board[selected[0] - 1][selected[1] - 1][0] === null) {
+      board[selected[0] - 1][selected[1] - 1][1] = 'redSquare';
+      board[selected[0] - 1][selected[1] - 1][2] = '';
+    }
+    if (selected[0] > 0 && selected[1] < 7 && board[selected[0] - 1][selected[1] + 1] !== undefined  && board[selected[0] - 1][selected[1] + 1][0] === null) {
+      board[selected[0] - 1][selected[1] + 1][1] = 'redSquare';
+      board[selected[0] - 1][selected[1] + 1][2] = '';
+    }
+    if (selected[0] < 7 && selected[1] > 0 && board[selected[0] + 1][selected[1] - 1] !== undefined  && board[selected[0] + 1][selected[1] - 1][0] === null) {
+      board[selected[0] + 1][selected[1] - 1][1] = 'redSquare';
+      board[selected[0] + 1][selected[1] - 1][2] = '';
+    }
+    if (selected[0] < 7 && selected[1] < 7 && board[selected[0] + 1][selected[1] + 1] !== undefined  && board[selected[0] + 1][selected[1] + 1][0] === null) {
+      board[selected[0] + 1][selected[1] + 1][1] = 'redSquare';
+      board[selected[0] + 1][selected[1] + 1][2] = '';
+    }
+    this.setState({ selected: [] })
+  }
+
+  selectBlack(event) {
+    const { board, selected, turn } = this.state;
+    if (turn === 'black') {
+      const target = event.target.getAttribute('name');
+      const columns = Number(target.charAt(1));
+      const rows = Number(target.charAt(0));
+      if (selected.length > 0) {
+        this.resetBlack();
+      } else {
+        board[rows][columns][1] = 'selectedPiece';
+        if (rows > 0 && columns > 0 && board[rows - 1][columns - 1] !== undefined  && board[rows - 1][columns - 1][0] === null) {
+          board[rows - 1][columns - 1][1] = 'selectedSquare';
+          board[rows - 1][columns - 1][2] = 'moveSelected';
+        }
+        if (rows > 0 && columns < 7 && board[rows - 1][columns + 1] !== undefined  && board[rows - 1][columns + 1][0] === null) {
+          board[rows - 1][columns + 1][1] = 'selectedSquare';
+          board[rows - 1][columns + 1][2] = 'moveSelected';
+        }
+        if (rows < 7 && columns > 0 && board[rows + 1][columns - 1] !== undefined  && board[rows + 1][columns - 1][0] === null  && board[rows][columns][0] === 'O') {
+          board[rows + 1][columns - 1][1] = 'selectedSquare';
+          board[rows + 1][columns - 1][2] = 'moveSelected';
+        }
+        if (rows < 7 && columns < 7 && board[rows + 1][columns + 1] !== undefined  && board[rows + 1][columns + 1][0] === null  && board[rows][columns][0] === 'O') {
+          board[rows + 1][columns + 1][1] = 'selectedSquare';
+          board[rows + 1][columns + 1][2] = 'moveSelected';
+        }
+        this.setState({ selected: [rows, columns] })
       }
     }
-    this.setState({ board });
   }
 
   render() {
     const { board } = this.state;
-    const whichPiece = (index, i, square) => {
-      if (square === null) {
+    const whichPiece = (square, index, i) => {
+      if (square[0] === null) {
         return null;
       } else if (square[0] === 'x') {
         return (
-          <img name={`["${square[0]}", ${square[1]}, ${index}, ${i}]`} onClick={this.moveRed} className="piece" src="https://cdn0.iconfinder.com/data/icons/board-games/48/Paul-14-512.png" />
+          <img name={`${index}${i}`} className="piece" src="https://cdn0.iconfinder.com/data/icons/board-games/48/Paul-14-512.png" />
         )
       }
       return (
-        <img className="piece" src="https://cdn4.iconfinder.com/data/icons/board-games-glyph/48/Games_BoardGames_Artboard_14-512.png" />
+        <img name={`${index}${i}`} className="piece" src="https://cdn4.iconfinder.com/data/icons/board-games-glyph/48/Games_BoardGames_Artboard_14-512.png" />
       )
     }
     return (
@@ -93,7 +172,7 @@ class App extends React.Component {
           <div>{board.map((row, index) => (
             <div className="grid" key={row[index] + index}>
             {row.map((square, i) => (
-              <div className={this.whichSquare(index, i)} key={square + i}>{whichPiece(index, i, square)}</div>
+              <div onClick={square[2] === 'selectRed' ? this.selectRed : square[2] === 'selectBlack' ? this.selectBlack : square[2] === 'moveSelected' ? this.moveSelected : null} name={`${index}${i}`} className={square[1]} key={square + i}>{whichPiece(square, index, i)}</div>
             ))}
           </div>
         ))}</div>
