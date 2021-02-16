@@ -22,6 +22,7 @@ body {
   margin: 25px;
 }
 .redSquare {
+  cursor: pointer;
   background-color: red;
   font-size: 30px;
   height: 50px;
@@ -72,4 +73,51 @@ body {
   top: 0; bottom: 0; left: 0; right: 0;
   background-color: aqua;
   z-index: 1001;
+}
+
+.formBox {
+  display: flex;
+  width: 70%;
+  margin: 20px;
+  flex-flow: column nowrap;
+  margin-left: 25%;
+  margin-right: 25%;
+  background-color: red;
+  border: 1px solid black;
+  border-radius: 10px;
+  text-align: center;
+  width: 50%;
+  /* height: 50%; */
+}
+
+label {
+  padding: 10px;
+  font-family:'Montserrat',sans-serif;
+}
+
+input {
+  width: 75%;
+  margin-left: 10%;
+  padding: 10px;
+  border:0;
+  font-family:'Montserrat',sans-serif;
+}
+
+button:hover {
+  background:aqua;
+  border: 2px solid black;
+  color: black;
+}
+
+button {
+  float:right;
+  padding:8px 12px;
+  margin: 5%;
+  border:2px solid aqua;
+  border-radius: 6px;
+  color: white;
+  background: black;
+  cursor:pointer;
+  transition:all .3s;
+  width: 40%;
 }

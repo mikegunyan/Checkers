@@ -3,6 +3,7 @@ import axios from 'axios';
 import Modal from './Modal';
 
 console.log(`Updated: ${new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false })}`)
+console.log('set up game list to build saved games modal option')
 
 class App extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class App extends React.Component {
       autoJumpBlack: false,
       modal: true,
       victory: '',
+      gameList: [],
     };
     this.makeBoard = this.makeBoard.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -30,13 +32,17 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.makeBoard();
+    this.makeBoard('newBoard');
   }
 
-  makeBoard() {
-    axios.get('/boards')
+  makeBoard(name) {
+    axios.get(`/api/boards/${name}`)
       .then((data) => {
-        this.setState({ board: data.data[0].board, turn: data.data[0].turn })
+        this.setState({ name: data.data.name, board: data.data.board, black: data.data.black, red: data.data.red, turn: data.data.turn, autoJumpRed: data.data.autoJumpRed, autoJumpBlack: data.data.autoJumpBlack });
+      })
+    axios.get('/api/games')
+      .then((data) => {
+        this.setState({ gameList: data.data[0].games });
       })
   }
 
@@ -332,7 +338,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { board, turn, modal } = this.state;
+    const { board, turn, modal, gameList } = this.state;
     const whichPiece = (square, index, i) => {
       if (square[0] === null) {
         return null;
@@ -356,7 +362,7 @@ class App extends React.Component {
           </div>
         ))}</div>
 
-        <Modal modal={modal} onClose={this.toggleModal} />
+        <Modal modal={modal} onClose={this.toggleModal} gameList={gameList} />
 
       </div>
     );
