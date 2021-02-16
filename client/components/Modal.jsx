@@ -9,6 +9,8 @@ class Modal extends React.Component {
       savedView: false,
     };
     this.handleChange = this.handleChange.bind(this);
+    this.changeView = this.changeView.bind(this);
+    this.startGame = this.startGame.bind(this);
   }
 
   onClose(event) {
@@ -24,9 +26,20 @@ class Modal extends React.Component {
     });
   }
 
+  changeView() {
+    const { savedView } = this.state;
+    this.setState({ savedView: !savedView })
+  }
+
+  startGame(event) {
+    const { makeBoard, onClose } = this.props;
+    makeBoard(event.target.name)
+    onClose();
+  }
+
   render() {
     const { playerOne, playerTwo, savedView } = this.state;
-    const { modal } = this.props;
+    const { modal, gameList } = this.props;
     if (!modal) {
       return null;
     }
@@ -36,7 +49,12 @@ class Modal extends React.Component {
           <div className="head"><h2>Checkers</h2></div>
           <div className="formBox">
             <h2>Select Game</h2>
-              <button className="altButton" onClick={this.update}>Saved Game</button>
+            <div>
+              {gameList.map((game) => (
+                <button key={Math.random() * (1000) - 1} name={game} className="altButton" onClick={this.startGame}>{game}</button>
+              ))}
+            </div>
+            <button className="altButton" onClick={this.changeView}>Back to Welcome Page</button>
           </div>
         </div>
       )
@@ -51,7 +69,7 @@ class Modal extends React.Component {
           <label>Player Two Name: </label>
           <input type="text" id="playerTwo" onChange={this.handleChange} value={playerTwo}></input>
             <div className="buttonGrid">
-            <button onClick={this.update}>Saved Game</button>
+            <button onClick={this.changeView}>Saved Game</button>
             <button onClick={(event) => {this.onClose(event)}}>New Game</button>
             </div>
         </div>

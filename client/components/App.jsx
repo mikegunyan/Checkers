@@ -362,7 +362,7 @@ class App extends React.Component {
           </div>
         ))}</div>
 
-        <Modal modal={modal} onClose={this.toggleModal} gameList={gameList} />
+        <Modal makeBoard={this.makeBoard} modal={modal} onClose={this.toggleModal} gameList={gameList} />
 
       </div>
     );
