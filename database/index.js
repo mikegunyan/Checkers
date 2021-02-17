@@ -14,6 +14,8 @@ const schema = new mongoose.Schema({
   turn: String,
   autoJumpRed: Boolean,
   autoJumpBlack: Boolean,
+  playerOne: String,
+  playerTwo: String,
 });
 
 const Board = mongoose.model('Board', schema);

@@ -10,14 +10,9 @@ class Modal extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.changeView = this.changeView.bind(this);
+    this.changeVictory = this.changeVictory.bind(this);
     this.startGame = this.startGame.bind(this);
-  }
-
-  onClose(event) {
-    const { onClose } = this.props;
-    if (onClose) {
-      onClose(event);
-    }
+    this.players = this.players.bind(this);
   }
 
   handleChange(event) {
@@ -31,19 +26,46 @@ class Modal extends React.Component {
     this.setState({ savedView: !savedView })
   }
 
+  changeVictory() {
+    const { changeVictory } = this.props;
+    this.changeView();
+    changeVictory();
+  }
+
   startGame(event) {
     const { makeBoard, onClose } = this.props;
     makeBoard(event.target.name)
     onClose();
   }
 
+  players() {
+    const { playerOne, playerTwo } = this.state;
+    const { players, onClose } = this.props;
+    players(playerOne, playerTwo);
+    onClose();
+  }
+
   render() {
     const { playerOne, playerTwo, savedView } = this.state;
-    const { modal, gameList } = this.props;
+    const { modal, gameList, victory } = this.props;
     if (!modal) {
       return null;
     }
     if (savedView) {
+      if (victory !== '') {
+        return (
+          <div className="modalBackground">
+            <div className="head"><h2>Checkers</h2></div>
+            <div className="formBox">
+              <h2>Select Game</h2>
+              <div>
+               <h1>{victory} wins!!!</h1>
+              </div>
+              <button className="altButton" onClick={this.changeVictory}>Back to Welcome Page</button>
+            </div>
+          </div>
+        )
+      }
       return (
         <div className="modalBackground">
           <div className="head"><h2>Checkers</h2></div>
@@ -70,7 +92,7 @@ class Modal extends React.Component {
           <input type="text" id="playerTwo" onChange={this.handleChange} value={playerTwo}></input>
             <div className="buttonGrid">
             <button onClick={this.changeView}>Saved Game</button>
-            <button onClick={(event) => {this.onClose(event)}}>New Game</button>
+            <button onClick={this.players}>New Game</button>
             </div>
         </div>
       </div>

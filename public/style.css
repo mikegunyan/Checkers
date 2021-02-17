@@ -4,10 +4,11 @@ body {
 
 .head {
   display: grid;
-  margin: auto;
+  margin: 0px 25%;
+  padding: 0;
   text-align: center;
-  grid-template-columns: auto auto auto;
-  width: 300px;
+  width: 50%;
+  height: fit-content;
   font-size: 40px;
 }
 .grid {
@@ -17,8 +18,13 @@ body {
   width: fit-content;
 }
 .piece {
-  max-width: 50px;
-  max-height: 50px;
+  max-width: 75px;
+  max-height: 75px;
+  margin: 25px;
+}
+.king {
+  max-width: 110px;
+  max-height: 110px;
   margin: 25px;
 }
 .redSquare {
@@ -120,4 +126,34 @@ button {
   cursor:pointer;
   transition:all .3s;
   width: 40%;
+}
+
+.altButton {
+  margin: 2px 25%;
+  width: 50%;
+}
+
+.buttonContainer {
+  margin: 0px 25%;
+  width: 50%;
+}
+
+.save {
+  float:right;
+  padding:8px 12px;
+  margin: 10px 0%;
+  border:2px solid aqua;
+  border-radius: 6px;
+  color: white;
+  background: black;
+  cursor:pointer;
+  transition:all .3s;
+  width: 50%;
+  border:2px solid red;
+}
+
+.save:hover {
+  background:red;
+  border: 2px solid black;
+  color: black;
 }

@@ -7,6 +7,7 @@ const db = mongoose.connect('mongodb://localhost/boardlist', { useNewUrlParser: 
   .catch((err) => console.log(err));
 
 const schema = new mongoose.Schema({
+  id: Number,
   games: Array,
 });
 

@@ -81,10 +81,12 @@ const newBoard = {
   turn: 'black',
   autoJumpRed: false,
   autoJumpBlack: false,
+  playerOne: 'Player One',
+  playerTwo: 'Player Two',
 };
 
 const testBoard = {
-  name: 'testOne',
+  name: 'Test One v Test Two',
   board: [
     [[null, 'redSquare', ''],
     [null, 'blackSquare', ''],
@@ -96,7 +98,7 @@ const testBoard = {
     [null, 'blackSquare', '']],
 
     [[null, 'blackSquare', ''],
-    [null, 'redSquare', ''],
+    ['o', 'redSquare', 'selectBlack'],
     [null, 'blackSquare', ''],
     [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
@@ -144,7 +146,7 @@ const testBoard = {
     [null, 'blackSquare', ''],
     [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    [null, 'redSquare', ''],
+    ['x', 'redSquare',  'selectRed'],
     [null, 'blackSquare', ''],
     [null, 'redSquare', ''],
     [null, 'blackSquare', '']],
@@ -158,15 +160,18 @@ const testBoard = {
     [null, 'blackSquare', ''],
     [null, 'redSquare', '']],
   ],
-  black: 1,
-  red: 1,
+  black: 2,
+  red: 2,
   turn: 'black',
   autoJumpRed: false,
   autoJumpBlack: true,
+  playerOne: 'Test One',
+  playerTwo: 'Test Two',
 };
 
 const gameList = {
-  games: ['testOne'],
+  id: 0,
+  games: ['Test One v Test Two'],
 };
 
 const makeBoard = () => {
