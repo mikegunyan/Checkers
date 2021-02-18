@@ -2,8 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import Modal from './Modal';
 
-console.log(`Updated: ${new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false })}`)
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -17,9 +15,16 @@ class App extends React.Component {
       autoJumpBlack: false,
       modal: true,
       victory: '',
+      gameList: [],
+      playerOne: 'Player One',
+      playerTwo: 'Player Two',
     };
     this.makeBoard = this.makeBoard.bind(this);
+    this.saveGame = this.saveGame.bind(this);
+    this.changeGame = this.changeGame.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.changeVictory = this.changeVictory.bind(this);
+    this.players = this.players.bind(this);
     this.moveSelected = this.moveSelected.bind(this);
     this.resetRed = this.resetRed.bind(this);
     this.resetRedJump = this.resetRedJump.bind(this);
@@ -30,14 +35,41 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.makeBoard();
+    this.makeBoard('newBoard');
   }
 
-  makeBoard() {
-    axios.get('/boards')
+  makeBoard(name) {
+    axios.get(`/api/boards/${name}`)
       .then((data) => {
-        this.setState({ board: data.data[0].board, turn: data.data[0].turn })
+        this.setState({ name: data.data.name, board: data.data.board, black: data.data.black, red: data.data.red, turn: data.data.turn, autoJumpRed: data.data.autoJumpRed, autoJumpBlack: data.data.autoJumpBlack, playerOne: data.data.playerOne, playerTwo: data.data.playerTwo, victory: '' });
       })
+    axios.get('/api/games')
+      .then((data) => {
+        this.setState({ gameList: data.data[0].games });
+      })
+  }
+
+  saveGame() {
+    const { playerOne, playerTwo, board, black, red, turn, autoJumpRed, autoJumpBlack, gameList } = this.state;
+    axios.post('/api/games', {
+      board: {
+        name: `${playerOne} v ${playerTwo}`,
+        board: board,
+        black: black,
+        red: red,
+        turn: turn,
+        autoJumpRed: autoJumpRed,
+        autoJumpBlack: autoJumpBlack,
+        playerOne: playerOne,
+        playerTwo: playerTwo,
+      },
+      games: gameList,
+    })
+  }
+
+  changeGame() {
+    this.toggleModal();
+    this.makeBoard('newBoard');
   }
 
   toggleModal() {
@@ -45,9 +77,17 @@ class App extends React.Component {
     this.setState({ modal: !modal });
   }
 
+  changeVictory() {
+    this.setState({ victory: '' });
+  }
+
+  players(one, two) {
+    this.setState({ playerOne: one, playerTwo: two });
+  }
+
   moveSelected(event) {
     const target = event.target.getAttribute('name');
-    const { board, selected, turn, autoJumpBlack, autoJumpRed, black, red } = this.state;
+    const { board, selected, turn, autoJumpBlack, autoJumpRed, black, red, playerOne, playerTwo } = this.state;
     const rows = Number(target.charAt(0));
     const columns = Number(target.charAt(1));
     const to = board[rows][columns];
@@ -57,13 +97,15 @@ class App extends React.Component {
     board[rows][columns][1] = 'redSquare';
     board[selected[0]][selected[1]][2] = '';
     if (turn === 'black') {
+      if (rows === 0) {
+        board[rows][columns][0] = 'O';
+      }
       if (autoJumpBlack) {
         const rowToDelete = (rows + selected[0]) / 2;
         const columnToDelete = (columns + selected[1]) / 2;
         board[rowToDelete][columnToDelete] = [null, 'redSquare', ''];
         if (red === 1) {
-          console.log('black wins')
-          this.setState({ modal: true, victory: 'black' })
+          this.setState({ modal: true, victory: playerOne })
         } else {
           this.setState( prevState => ({ red: prevState.red - 1 }));
           this.resetBlackJump();
@@ -95,13 +137,15 @@ class App extends React.Component {
         }
       }
     } else {
+      if (rows === 7) {
+        board[rows][columns][0] = 'X';
+      }
       if (autoJumpRed) {
         const rowToDelete = (rows + selected[0]) / 2;
         const columnToDelete = (columns + selected[1]) / 2;
         board[rowToDelete][columnToDelete] = [null, 'redSquare', ''];
         if (black === 1) {
-          console.log('red wins')
-          this.setState({ modal: true, victory: 'red' })
+          this.setState({ modal: true, victory: playerTwo })
         } else {
           this.setState( prevState => ({ black: prevState.black - 1 }));
           this.resetRedJump();
@@ -115,12 +159,16 @@ class App extends React.Component {
           if (board[row][column][0] === 'o' || board[row][column][0] === 'O') {
             if (board[row][column][0] === 'O') {
               if ((row < 7 && column > 0 && board[row + 1][column - 1][0] === 'X' && board[row + 2][column - 2][0] === null)
+              || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'X' && board[row + 2][column + 2][0] === null)
+              || (row < 7 && column > 0 && board[row + 1][column - 1][0] === 'x' && board[row + 2][column - 2][0] === null)
               || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'x' && board[row + 2][column + 2][0] === null)) {
                 this.setState({ autoJumpBlack: true });
                 break;
               }
             }
-            if ((row > 0 && column > 0 && board[row - 1][column - 1][0] === 'x' && board[row - 2][column - 2][0] === null)
+            if ((row > 0 && column > 0 && board[row - 1][column - 1][0] === 'X' && board[row - 2][column - 2][0] === null)
+              || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'X' && board[row - 2][column + 2][0] === null)
+              || (row > 0 && column > 0 && board[row - 1][column - 1][0] === 'x' && board[row - 2][column - 2][0] === null)
               || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'x' && board[row - 2][column + 2][0] === null)) {
                 this.setState({ autoJumpBlack: true });
               break;
@@ -332,13 +380,28 @@ class App extends React.Component {
   }
 
   render() {
-    const { board, turn, modal } = this.state;
+    const { board, turn, modal, gameList, playerOne, playerTwo, victory } = this.state;
+    const playersTurn = () => {
+      if (turn === 'black') {
+        return playerOne;
+      } else {
+        return playerTwo;
+      }
+    }
     const whichPiece = (square, index, i) => {
       if (square[0] === null) {
         return null;
       } else if (square[0] === 'x') {
         return (
           <img name={`${index}${i}`} className="piece" src="https://cdn0.iconfinder.com/data/icons/board-games/48/Paul-14-512.png" />
+        )
+      } else if (square[0] === 'X') {
+        return (
+          <img name={`${index}${i}`} className="king" src="https://cdn0.iconfinder.com/data/icons/board-games/48/Paul-14-512.png" />
+        )
+      } else if (square[0] === 'O') {
+        return (
+          <img name={`${index}${i}`} className="king" src="https://cdn4.iconfinder.com/data/icons/board-games-glyph/48/Games_BoardGames_Artboard_14-512.png" />
         )
       }
       return (
@@ -347,16 +410,20 @@ class App extends React.Component {
     }
     return (
       <div>
-        <div className="head"><h2>Checkers</h2></div>
-          <div>{board.map((row, index) => (
-            <div className="grid" key={row[index] + index}>
-            {row.map((square, i) => (
-              <div onClick={square[2] === 'selectRed' ? this.selectRed : square[2] === 'selectBlack' ? this.selectBlack : square[2] === 'moveSelected' ? this.moveSelected : null} name={`${index}${i}`} className={square[1]} key={square + i}>{whichPiece(square, index, i)}</div>
-            ))}
-          </div>
+        <div className="head"><h5>Your turn {playersTurn()}!</h5></div>
+        <div className="buttonContainer">
+          <button className="save" onClick={this.saveGame}>Save Game</button>
+          <button className="save" onClick={this.changeGame}>Change Game</button>
+        </div>
+        <div>{board.map((row, index) => (
+          <div className="grid" key={row[index] + index}>
+          {row.map((square, i) => (
+            <div onClick={square[2] === 'selectRed' ? this.selectRed : square[2] === 'selectBlack' ? this.selectBlack : square[2] === 'moveSelected' ? this.moveSelected : null} name={`${index}${i}`} className={square[1]} key={square + i}>{whichPiece(square, index, i)}</div>
+          ))}
+        </div>
         ))}</div>
 
-        <Modal modal={modal} onClose={this.toggleModal} />
+        <Modal makeBoard={this.makeBoard} modal={modal} victory={victory} changeVictory={this.changeVictory} onClose={this.toggleModal} players={this.players} gameList={gameList} />
 
       </div>
     );

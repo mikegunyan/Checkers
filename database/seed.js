@@ -1,6 +1,8 @@
 const Board = require('./index.js');
+const Games = require('./gamesIndex.js');
 
 const newBoard = {
+  name: 'newBoard',
   board: [
     [['x', 'redSquare','selectRed'],
     [null, 'blackSquare', ''],
@@ -74,42 +76,31 @@ const newBoard = {
     [null, 'blackSquare', ''],
     ['o', 'redSquare', 'selectBlack']],
   ],
+  black: 12,
+  red: 12,
   turn: 'black',
+  autoJumpRed: false,
+  autoJumpBlack: false,
+  playerOne: 'Player One',
+  playerTwo: 'Player Two',
 };
 
 const testBoard = {
+  name: 'Test One v Test Two',
   board: [
-    [['x', 'redSquare','selectRed'],
+    [[null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    ['x', 'redSquare', 'selectRed'],
-    [null, 'blackSquare', ''],
-    ['x', 'redSquare', 'selectRed'],
-    [null, 'blackSquare', ''],
-    ['x', 'redSquare', 'selectRed'],
-    [null, 'blackSquare', '']],
-
-    [[null, 'blackSquare', ''],
-    ['x', 'redSquare', 'selectRed'],
-    [null, 'blackSquare', ''],
-    ['x', 'redSquare', 'selectRed'],
-    [null, 'blackSquare', ''],
-    ['x', 'redSquare', 'selectRed'],
-    [null, 'blackSquare', ''],
-    ['x', 'redSquare', 'selectRed']],
-
-    [['x', 'redSquare', 'selectRed'],
-    [null, 'blackSquare', ''],
-    ['x', 'redSquare',  'selectRed'],
-    [null, 'blackSquare', ''],
-    ['x', 'redSquare',  'selectRed'],
-    [null, 'blackSquare', ''],
-    ['x', 'redSquare',  'selectRed'],
-    [null, 'blackSquare', '']],
-
-    [[null, 'blackSquare', ''],
     [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    ['o', 'redSquare', ''],
+    [null, 'redSquare', ''],
+    [null, 'blackSquare', ''],
+    [null, 'redSquare', ''],
+    [null, 'blackSquare', '']],
+
+    [[null, 'blackSquare', ''],
+    ['o', 'redSquare', 'selectBlack'],
+    [null, 'blackSquare', ''],
+    [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
     [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
@@ -125,33 +116,62 @@ const testBoard = {
     [null, 'blackSquare', '']],
 
     [[null, 'blackSquare', ''],
-    ['o', 'redSquare', 'selectBlack'],
+    [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    [null, 'redSquare', 'selectBlack'],
+    [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    ['o', 'redSquare',  'selectBlack'],
+    [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    ['o', 'redSquare', 'selectBlack']],
+    [null, 'redSquare', '']],
 
-    [['o', 'redSquare', 'selectBlack'],
+    [[null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    ['o', 'redSquare', 'selectBlack'],
+    [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    ['o', 'redSquare', 'selectBlack'],
+    ['x', 'redSquare',  'selectRed'],
     [null, 'blackSquare', ''],
-    ['o', 'redSquare', 'selectBlack'],
+    [null, 'redSquare', ''],
     [null, 'blackSquare', '']],
 
     [[null, 'blackSquare', ''],
-    ['o', 'redSquare', 'selectBlack'],
+    [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
     ['o', 'redSquare', 'selectBlack'],
     [null, 'blackSquare', ''],
-    ['o', 'redSquare', 'selectBlack'],
+    [null, 'redSquare', ''],
     [null, 'blackSquare', ''],
-    ['o', 'redSquare', 'selectBlack']],
+    [null, 'redSquare', '']],
+
+    [[null, 'redSquare', ''],
+    [null, 'blackSquare', ''],
+    [null, 'redSquare', ''],
+    [null, 'blackSquare', ''],
+    ['x', 'redSquare',  'selectRed'],
+    [null, 'blackSquare', ''],
+    [null, 'redSquare', ''],
+    [null, 'blackSquare', '']],
+
+    [[null, 'blackSquare', ''],
+    [null, 'redSquare', ''],
+    [null, 'blackSquare', ''],
+    [null, 'redSquare', ''],
+    [null, 'blackSquare', ''],
+    [null, 'redSquare', ''],
+    [null, 'blackSquare', ''],
+    [null, 'redSquare', '']],
   ],
-  turn: 'red',
+  black: 2,
+  red: 2,
+  turn: 'black',
+  autoJumpRed: false,
+  autoJumpBlack: true,
+  playerOne: 'Test One',
+  playerTwo: 'Test Two',
+};
+
+const gameList = {
+  id: 0,
+  games: ['Test One v Test Two'],
 };
 
 const makeBoard = () => {
@@ -169,3 +189,11 @@ const makeTestBoard = () => {
 };
 
 makeTestBoard();
+
+const makeGameList = () => {
+  Games.create(gameList)
+    .then(() => process.exit())
+    .catch((err) => console.log(err));
+};
+
+makeGameList();
