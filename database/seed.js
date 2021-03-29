@@ -1,5 +1,5 @@
-const Board = require('./index.js');
-const Games = require('./gamesIndex.js');
+const Board = require('./board.js');
+const Games = require('./gamesList.js');
 
 const newBoard = {
   name: 'newBoard',
