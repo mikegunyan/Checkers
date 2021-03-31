@@ -1,6 +1,4 @@
 # Checkers
--- run the folliwing in the terminal
-
   ## Install dependencies
   npm install
 
