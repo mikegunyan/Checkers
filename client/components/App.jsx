@@ -458,14 +458,14 @@ class App extends React.Component {
         </div>
         <div>
           {board.map((row, index) => (
-            <div className="grid" key={`row ${Math.floor(Math.random() * 1000)}`}>
+            <div className="grid" key={`row ${Math.random() * 1000}`}>
               {row.map((square, i) => (
                 <div
                   onClick={square[2] === 'selectRed' ? this.selectRed : square[2] === 'selectBlack' ? this.selectBlack : square[2] === 'moveSelected' ? this.moveSelected : null}
                   onKeyPress={square[2] === 'selectRed' ? this.selectRed : square[2] === 'selectBlack' ? this.selectBlack : square[2] === 'moveSelected' ? this.moveSelected : null}
                   name={`${index}${i}`}
                   className={square[1]}
-                  key={`square ${Math.floor(Math.random() * 1000)}`}
+                  key={`square ${Math.random() * 1000}`}
                 >
                   {whichPiece(square, index, i)}
                 </div>

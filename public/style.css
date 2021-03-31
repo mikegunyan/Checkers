@@ -1,16 +1,14 @@
 body {
   background-color: aqua;
 }
-
 .head {
-  display: grid;
   margin: 0px 25%;
-  padding: 0;
   text-align: center;
-  width: 50%;
-  height: fit-content;
   font-size: 40px;
 }
+
+
+/**  Board  **/
 .grid {
   display: grid;
   margin: auto;
@@ -72,15 +70,18 @@ body {
 }
 
 
-
-
+/**  Inputs  **/
+.message {
+  background-color: deepskyblue;
+  margin: 2px 25%;
+  width: 50%;
+}
 .modalBackground {
   position: fixed;
   top: 0; bottom: 0; left: 0; right: 0;
   background-color: aqua;
   z-index: 1001;
 }
-
 .formBox {
   display: flex;
   width: 70%;
@@ -93,27 +94,27 @@ body {
   border-radius: 10px;
   text-align: center;
   width: 50%;
-  /* height: 50%; */
 }
-
 label {
   padding: 10px;
   font-family:'Montserrat',sans-serif;
 }
-
 input {
   width: 75%;
-  margin-left: 10%;
   padding: 10px;
   border-radius: 25px;
   border:0;
   font-family:'Montserrat',sans-serif;
 }
-
+.login {
+  margin-left: 10%;
+}
 input:focus {
   outline: none;
 }
 
+
+/**  Buttons  **/
 button {
   padding: 8px 12px;
   margin: 5%;
@@ -125,7 +126,6 @@ button {
   transition: all .3s;
   width: 40%;
 }
-
 .inActive {
   padding: 8px 12px;
   margin: 5%;
@@ -137,40 +137,28 @@ button {
   transition: all .3s;
   width: 40%;
 }
-
 .inActive.active {
   cursor: pointer;
   transition: all .3s;
 }
-
 button:hover {
   background: aqua;
   border: 2px solid black;
   color: black;
 }
-
 .altButton {
   margin: 2px 25%;
   width: 50%;
 }
-
-.message {
-  background-color: deepskyblue;
-  margin: 2px 25%;
-  width: 50%;
-}
-
 .buttonContainer {
   margin: 0px 25%;
   width: 50%;
 }
-
 .buttonGrid {
   display: flex;
   margin: 0px;
   padding: 0px;
 }
-
 .save {
   float:right;
   padding:8px 12px;
@@ -184,7 +172,6 @@ button:hover {
   width: 50%;
   border:2px solid red;
 }
-
 .save:hover {
   background:red;
   border: 2px solid black;
