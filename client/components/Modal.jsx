@@ -91,8 +91,8 @@ class Modal extends React.Component {
           <label>Player Two Name: </label>
           <input type="text" id="playerTwo" onChange={this.handleChange} value={playerTwo}></input>
             <div className="buttonGrid">
-            <button onClick={this.changeView}>Saved Game</button>
-            <button onClick={this.players}>New Game</button>
+              <button onClick={this.changeView}>Saved Game</button>
+              <button onClick={this.players}>New Game</button>
             </div>
         </div>
       </div>

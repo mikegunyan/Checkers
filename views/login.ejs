@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lan="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Checkers</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div>
+      <div class="modalBackground">
+        <div class="head"><h2>Checkers</h2></div>
+        <form class="formBox" action="/login" method="POST">
+          <h2>Login</h2>
+          <% if (messages.error) { %>
+            <%= messages.error %>
+          <% } %>
+          <label for="email">Email: </label>
+          <input type="email" id="email" name="email" required>
+          <label for="password">Password: </label>
+          <input type="password" id="password" name="password" required>
+            <div class="buttonGrid">
+            <button type="submit">Login</button>
+            <button onclick="window.location.href='/register'">Register</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

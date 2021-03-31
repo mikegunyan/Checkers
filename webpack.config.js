@@ -1,6 +1,6 @@
 const path = require('path');
 const SRC_DIR = path.resolve(__dirname, 'client');
-const OUT_DIR = path.resolve(__dirname, 'public');
+const OUT_DIR = path.resolve(__dirname, 'views');
 
 module.exports = {
   entry: path.resolve(SRC_DIR, 'index.jsx'),
