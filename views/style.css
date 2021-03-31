@@ -121,6 +121,23 @@ button {
   width: 40%;
 }
 
+.inActive {
+  padding: 8px 12px;
+  margin: 4%;
+  border: 2px solid aqua;
+  border-radius: 6px;
+  color: white;
+  background: black;
+  cursor: no-drop;
+  transition: all .3s;
+  width: 40%;
+}
+
+.inActive.active {
+  cursor: pointer;
+  transition: all .3s;
+}
+
 button:hover {
   background: aqua;
   border: 2px solid black;
@@ -128,6 +145,12 @@ button:hover {
 }
 
 .altButton {
+  margin: 2px 25%;
+  width: 50%;
+}
+
+.message {
+  background-color: deepskyblue;
   margin: 2px 25%;
   width: 50%;
 }

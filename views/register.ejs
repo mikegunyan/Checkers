@@ -9,8 +9,9 @@
     <div>
       <div class="modalBackground">
         <div class="head"><h2>Checkers</h2></div>
-        <form class="formBox" action="/register" method="POST">
-          <h2>Register</h2>
+        <form name="formBox" class="formBox" action="/register" method="POST">
+          <h2>Register User</h2>
+          <div class="message"></div>
           <label for="firstName">First Name:</label>
           <input type="text" id="firstName" name="firstName" required>
           <label for="lastName">Last Name:</label>
@@ -20,12 +21,36 @@
           <label for="email">Email:</label>
           <input type="email" id="email" name="email" required>
           <label for="password">Password:</label>
-          <input type="password" id="password" name="password" required>
+          <input onkeyup="count()" type="password" id="password" name="password" required>
+          <label for="confirm">Confirm Password:</label>
+          <input onkeyup="compare()" disabled class="inActiveInput" type="password" id="confirm" name="confirm" required>
             <div class="buttonGrid">
-              <button type="submit">Register</button>
-            <button onclick="window.location.href='/login'">Login</button>
+              <button disabled class="inActive" type="submit">Register User</button>
+            <button class="active" onclick="window.location.href='/login'">Back to Login</button>
             </div>
         </form>
+        <script>
+          const compare = () => {
+            if (document.formBox.confirm.value === document.formBox.password.value) {
+              document.getElementsByClassName('message')[0].innerText = 'Passwords match!'
+              document.getElementsByClassName('inActive')[0].removeAttribute('disabled', '');
+              document.getElementsByClassName('inActive')[0].classList.add('active');
+            } else {
+              document.getElementsByClassName('message')[0].innerText = 'Passwords don\'t match!'
+              document.getElementsByClassName('inActive')[0].setAttribute('disabled', '');
+              document.getElementsByClassName('inActive')[0].classList.remove('active');
+            }
+          }
+          const count = () => {
+            if (document.formBox.password.value.length >= 8) {
+              document.getElementsByClassName('message')[0].innerText = 'Password length is good!';
+              document.getElementsByClassName('inActiveInput')[0].removeAttribute('disabled', '');
+            } else {
+              document.getElementsByClassName('message')[0].innerText = 'Password needs to be at least 8 caharacters long!';
+              document.getElementsByClassName('inActiveInput')[0].setAttribute('disabled', '');
+            }
+          }
+        </script>
       </div>
     </div>
   </body>
