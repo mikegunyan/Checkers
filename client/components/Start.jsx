@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Modal extends React.Component {
+class Start extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +23,7 @@ class Modal extends React.Component {
 
   changeView() {
     const { savedView } = this.state;
-    this.setState({ savedView: !savedView })
+    this.setState({ savedView: !savedView });
   }
 
   changeVictory() {
@@ -34,7 +34,7 @@ class Modal extends React.Component {
 
   startGame(event) {
     const { makeBoard, onClose } = this.props;
-    makeBoard(event.target.name)
+    makeBoard(event.target.name);
     onClose();
   }
 
@@ -59,12 +59,15 @@ class Modal extends React.Component {
             <div className="formBox">
               <h2>Select Game</h2>
               <div>
-               <h1>{victory} wins!!!</h1>
+                <h1>
+                  {victory}
+                  wins!!!
+                </h1>
               </div>
-              <button className="altButton" onClick={this.changeVictory}>Back to Welcome Page</button>
+              <button className="altButton" type="button" onClick={this.changeVictory}>Back to Welcome Page</button>
             </div>
           </div>
-        )
+        );
       }
       return (
         <div className="modalBackground">
@@ -73,31 +76,35 @@ class Modal extends React.Component {
             <h2>Select Game</h2>
             <div>
               {gameList.map((game) => (
-                <button key={Math.random() * (1000) - 1} name={game} className="altButton" onClick={this.startGame}>{game}</button>
+                <button key={Math.random() * (1000) - 1} name={game} className="altButton" type="button" onClick={this.startGame}>{game}</button>
               ))}
             </div>
-            <button className="altButton" onClick={this.changeView}>Back to Welcome Page</button>
+            <button className="altButton" type="button" onClick={this.changeView}>Back to Welcome Page</button>
           </div>
         </div>
-      )
+      );
     }
     return (
       <div className="modalBackground">
         <div className="head"><h2>Checkers</h2></div>
         <div className="formBox">
           <h2>Start Game</h2>
-          <label>Player One Name: </label>
-          <input type="text" id="playerOne" onChange={this.handleChange} value={playerOne}></input>
-          <label>Player Two Name: </label>
-          <input type="text" id="playerTwo" onChange={this.handleChange} value={playerTwo}></input>
-            <div className="buttonGrid">
-              <button onClick={this.changeView}>Saved Game</button>
-              <button onClick={this.players}>New Game</button>
-            </div>
+          <label htmlFor="playerOne">
+            Player One Name:
+            <input type="text" id="playerOne" onChange={this.handleChange} value={playerOne} />
+          </label>
+          <label htmlFor="playerTwo">
+            Player Two Name:
+            <input type="text" id="playerTwo" onChange={this.handleChange} value={playerTwo} />
+          </label>
+          <div className="buttonGrid">
+            <button type="button" onClick={this.changeView}>Saved Game</button>
+            <button type="button" onClick={this.players}>New Game</button>
+          </div>
         </div>
       </div>
-    )
+    );
   }
-
 }
-export default Modal;
+
+export default Start;

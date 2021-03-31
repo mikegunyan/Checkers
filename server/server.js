@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
+  require('dotenv').config();
 }
 
 const express = require('express');
@@ -9,48 +9,34 @@ const bodyParser = require('body-parser');
 const Board = require('../database/board');
 const Games = require('../database/gamesList');
 const Users = require('../database/users');
-const bcrypt = require('bcrypt')
-const passport = require('passport')
-const flash = require('express-flash')
-const session = require('express-session')
-const methodOverride = require('method-override')
+const bcrypt = require('bcrypt');
+const passport = require('passport');
+const flash = require('express-flash');
+const session = require('express-session');
+const methodOverride = require('method-override');
 
-const initializePassport = require('../passport-config')
+const initializePassport = require('../passport-config');
 initializePassport(
   passport,
-  (email) => {
-    return Users.findOne({
-      email: email,
-    })
-      .then((data) => {
-        return data;
-      });
-  },
-  (id) => {
-    return Users.findOne({
-      id: id,
-    })
-      .then((data) => {
-        return data;
-      });
-  }
+  email => Users.findOne({ email }).then(data => data),
+  id => Users.findOne({ id }).then(data => data)
 )
 
-app.set('view-engine', 'ejs')
-app.use(express.urlencoded({ extended: false }))
-app.use(flash())
+app.set('view-engine', 'ejs');
+app.use(express.urlencoded({ extended: false }));
+app.use(flash());
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false
-}))
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(methodOverride('_method'))
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(methodOverride('_method'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../views')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 
 /************************************************************/
@@ -58,22 +44,22 @@ app.use(express.static(path.join(__dirname, '../views')));
 /************************************************************/
 
 app.get('/', checkAuthenticated, (req, res) => {
-  res.render('index.ejs', { name: req.user.name })
-})
+  res.render('index.ejs', { name: req.user.name });
+});
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
-  res.render('login.ejs')
-})
+  res.render('login.ejs');
+});
 
 app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/login',
-  failureFlash: true
-}))
+  failureFlash: true,
+}));
 
 app.get('/register', checkNotAuthenticated, (req, res) => {
-  res.render('register.ejs')
-})
+  res.render('register.ejs');
+});
 
 app.post('/register', checkNotAuthenticated, async (req, res) => {
   try {
@@ -82,35 +68,35 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
       id: Date.now().toString(),
       firstName: req.body.firstName,
       lastName: req.body.lastName,
-      userName: req.body.userName,
       email: req.body.email,
+      userName: req.body.userName,
       password: hashedPassword
     });
-    res.redirect('/login')
+    res.redirect('/login');
   } catch {
-    res.redirect('/register')
+    res.redirect('/register');
   }
-})
+});
 
 app.delete('/logout', (req, res) => {
-  req.logOut()
-  res.redirect('/login')
-})
+  req.logOut();
+  res.redirect('/login');
+});
 
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return next()
+    return next();
   }
 
-  res.redirect('/login')
-}
+  res.redirect('/login');
+};
 
 function checkNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect('/')
+    return res.redirect('/');
   }
-  next()
-}
+  next();
+};
 
 
 /************************************************************/

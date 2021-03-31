@@ -105,13 +105,18 @@ input {
   width: 75%;
   margin-left: 10%;
   padding: 10px;
+  border-radius: 25px;
   border:0;
   font-family:'Montserrat',sans-serif;
 }
 
+input:focus {
+  outline: none;
+}
+
 button {
   padding: 8px 12px;
-  margin: 4%;
+  margin: 5%;
   border: 2px solid aqua;
   border-radius: 6px;
   color: white;
@@ -123,7 +128,7 @@ button {
 
 .inActive {
   padding: 8px 12px;
-  margin: 4%;
+  margin: 5%;
   border: 2px solid aqua;
   border-radius: 6px;
   color: white;
