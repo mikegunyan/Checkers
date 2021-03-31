@@ -1,5 +1,6 @@
 const Board = require('./board.js');
 const Games = require('./gamesList.js');
+const Users = require('./users.js');
 
 const newBoard = {
   name: 'newBoard',
@@ -174,6 +175,17 @@ const gameList = {
   games: ['Test One v Test Two'],
 };
 
+
+const user = {
+  id : "1617152727626",
+  firstName : "Test",
+  lastName : "Test",
+  userName : "Test",
+  email : "test@test.com",
+  password : "$2b$10$IldQFWfbHhLWgQQT1TAM9ez2qJftqQ5kxzzIUfWv.4lluEfWIXVru",
+  __v : 0
+};
+
 const makeBoard = () => {
   Board.create(newBoard)
     .then(() => process.exit())
@@ -197,3 +209,11 @@ const makeGameList = () => {
 };
 
 makeGameList();
+
+const makeUser = () => {
+  Users.create(user)
+    .then(() => process.exit())
+    .catch((err) => console.log(err));
+};
+
+makeUser();

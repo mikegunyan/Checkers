@@ -109,23 +109,22 @@ input {
   font-family:'Montserrat',sans-serif;
 }
 
-button:hover {
-  background:aqua;
-  border: 2px solid black;
-  color: black;
-}
-
 button {
-  float:right;
-  padding:8px 12px;
-  margin: 5%;
-  border:2px solid aqua;
+  padding: 8px 12px;
+  margin: 4%;
+  border: 2px solid aqua;
   border-radius: 6px;
   color: white;
   background: black;
-  cursor:pointer;
-  transition:all .3s;
+  cursor: pointer;
+  transition: all .3s;
   width: 40%;
+}
+
+button:hover {
+  background: aqua;
+  border: 2px solid black;
+  color: black;
 }
 
 .altButton {
@@ -136,6 +135,12 @@ button {
 .buttonContainer {
   margin: 0px 25%;
   width: 50%;
+}
+
+.buttonGrid {
+  display: flex;
+  margin: 0px;
+  padding: 0px;
 }
 
 .save {

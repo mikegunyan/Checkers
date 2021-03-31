@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import Modal from './Modal';
-import Login from './Login';
 
 class App extends React.Component {
   constructor(props) {
@@ -411,7 +410,10 @@ class App extends React.Component {
     }
     return (
       <div>
-        <div className="head"><h5>Your turn {playersTurn()}!</h5></div>
+        <div className="head">
+          <button>Logout</button>
+          <h5>Your turn {playersTurn()}!</h5>
+        </div>
         <div className="buttonContainer">
           <button className="save" onClick={this.saveGame}>Save Game</button>
           <button className="save" onClick={this.changeGame}>Change Game</button>
