@@ -447,9 +447,7 @@ class App extends React.Component {
       <div>
         <div className="head">
           <h5>
-            Your turn
-            {playersTurn()}
-            !
+            {`Your turn ${playersTurn()}!`}
           </h5>
         </div>
         <div className="buttonContainer">
