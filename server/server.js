@@ -40,7 +40,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
+// passport.serializeUser(function(user, done) {
+//   done(null, user);
+// });
 
+// passport.deserializeUser(function(user, done) {
+//   done(null, user);
+// });
 /************************************************************/
 // Authentication routes
 /************************************************************/
@@ -48,15 +54,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.get('/', checkAuthenticated, async (req, res) => {
   res.render('index.ejs', { name: req.user.userName });
   user = await req.user;
-    // .then(() => console.log(user))
-  // setTimeout(() => {
-  //   console.log(user)
-  //   user = {
-  //     username: user.userName,
-  //     id: user._id,
-  //   }
-  //   console.log(user)
-  // }, 1000)
+  setTimeout(() => {
+    console.log(user)
+  }, 1000)
 });
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
