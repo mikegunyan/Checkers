@@ -446,13 +446,7 @@ class App extends React.Component {
     return (
       <div>
         <div className="head">
-          <h5>
-            {`Your turn ${playersTurn()}!`}
-          </h5>
-        </div>
-        <div className="buttonContainer">
-          <button className="save" type="button" onClick={this.saveGame}>Save Game</button>
-          <button className="save" type="button" onClick={this.changeGame}>Change Game</button>
+          <h5>{`Your turn ${playersTurn()}!`}</h5>
         </div>
         <div>
           {board.map((row, index) => (
