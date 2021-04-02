@@ -55,11 +55,10 @@ class App extends React.Component {
             return data;
           })
           .then((data) => {
-            axios.get('/api/games')
+            axios.get(`/api/games/${data.id}`)
               .then((games) => {
-                console.log(games)
                 this.setState({
-                  board: data.board, black: data.black, red: data.red, turn: data.turn, autoJumpRed: data.autoJumpRed, autoJumpBlack: data.autoJumpBlack, playerOne: data.playerOne, playerTwo: data.playerTwo, victory: '', playerOne: data.username, id: data.id, gameList: games.data[0].games });
+                  board: data.board, black: data.black, red: data.red, turn: data.turn, autoJumpRed: data.autoJumpRed, autoJumpBlack: data.autoJumpBlack, playerOne: data.playerOne, playerTwo: data.playerTwo, victory: '', playerOne: data.username, id: data.id, gameList: games.data.games });
               });
           });
       });
@@ -73,9 +72,9 @@ class App extends React.Component {
   saveGame() {
     const {
       playerOne, playerTwo, board, black, red,
-      turn, autoJumpRed, autoJumpBlack, gameList,
+      turn, autoJumpRed, autoJumpBlack, gameList, id,
     } = this.state;
-    axios.post('/api/games', {
+    axios.post(`/api/games/${id}`, {
       board: {
         name: `${playerOne} v ${playerTwo}`,
         board,

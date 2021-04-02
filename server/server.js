@@ -54,7 +54,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.get('/', checkAuthenticated, async (req, res) => {
   res.render('index.ejs', { name: req.user.userName });
   user = await req.user;
-  // setTimeout(() => console.log(user), 1000)
 });
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
@@ -81,7 +80,15 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
       email: req.body.email,
       userName: req.body.userName,
       password: hashedPassword
-    });
+    })
+      .then((data) => {
+        Games.create({
+          _id: data._id,
+          games: []
+        })
+        .then(() => res.sendStatus(204))
+        .catch((err) => res.send(err));
+      });
     res.redirect('/login');
   } catch {
     res.redirect('/register');
@@ -129,19 +136,23 @@ app.get('/api/boards/:name', async (req, res) => {
     .catch((err) => res.send(err));
 });
 
-app.get('/api/games', async (req, res) => {
-  Games.find({})
-  .then((data) => res.status(200).send(data))
-  .catch((err) => res.send(err));
+app.get('/api/games/:id', async (req, res) => {
+  Games.findById(req.params.id)
+    .then((data) => {
+      res.status(200).send(data)
+    })
+    .catch((err) => res.send(err));
 });
 
-app.post('/api/games', async (req, res) => {
-  const board = req.body.board;
-  const gameList = req.body.games;
-  gameList.push(req.body.board.name)
-  Board.create(board)
-    .then(() => {
-      Games.findOneAndUpdate({ id: 0 }, {
+app.post('/api/games/:id', async (req, res) => {
+  Board.create(req.body.board)
+    .then((data) => {
+      const gameList = req.body.games;
+      gameList.push({
+        name: req.body.board.name,
+        gameId: `${data._id}`
+      });
+      Games.findByIdAndUpdate(req.params.id, {
         games: gameList,
       })
       .then(() => res.sendStatus(204))
