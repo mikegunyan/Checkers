@@ -1,5 +1,5 @@
 body {
-  background-color: aqua;
+  background-image: url('images/background.jpeg');
 }
 .head {
   margin: 0px 25%;
@@ -14,20 +14,23 @@ body {
   margin: auto;
   grid-template-columns: auto auto auto auto auto auto auto auto;
   width: fit-content;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
 }
 .piece {
-  max-width: 75px;
-  max-height: 75px;
+  max-width: 100px;
+  max-height: 100px;
   margin: 25px;
 }
 .king {
-  max-width: 110px;
-  max-height: 110px;
+  max-width: 100px;
+  max-height: 100px;
   margin: 25px;
 }
 .redSquare {
   cursor: pointer;
-  background-color: red;
+  background-image: url('images/light.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
   font-size: 30px;
   height: 50px;
   width: 50px;
@@ -37,7 +40,9 @@ body {
   align-items: center;
 }
 .blackSquare {
-  background-color: black;
+  background-image: url('images/dark.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
   font-size: 30px;
   height: 50px;
   width: 50px;
@@ -47,7 +52,10 @@ body {
   align-items: center;
 }
 .selectedSquare {
-  background-color: darkred;
+  background-image: url('images/light.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  filter: brightness(70%);
   font-size: 30px;
   height: 50px;
   width: 50px;
@@ -57,7 +65,10 @@ body {
   align-items: center;
 }
 .selectedPiece {
-  background-color: red;
+  background-image: url('images/light.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  filter: brightness(70%);
   transform: scale(1.2);
   border-radius: 25px;
   font-size: 30px;
@@ -79,31 +90,40 @@ body {
 .modalBackground {
   position: fixed;
   top: 0; bottom: 0; left: 0; right: 0;
-  background-color: aqua;
-  z-index: 1001;
+  background-image: url('images/background.jpeg');
+}
+.settingsBackground {
+  position: fixed;
+  top: 0; bottom: 0; left: 0; right: 0;
+  z-index: 2;
+  background-image: url('images/background.jpeg');
 }
 .formBox {
+  color: black;
   display: flex;
   width: 70%;
   margin: 20px;
+  padding: 15px;
   flex-flow: column nowrap;
   margin-left: 25%;
   margin-right: 25%;
-  background-color: red;
-  border: 1px solid black;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
   border-radius: 10px;
   text-align: center;
   width: 50%;
 }
 label {
+  margin-top: 5px;
   padding: 10px;
   font-family:'Montserrat',sans-serif;
 }
 input {
   width: 75%;
+  margin: 5px 0px;
   padding: 10px;
   border-radius: 25px;
   border:0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
   font-family:'Montserrat',sans-serif;
 }
 .login {
@@ -112,39 +132,33 @@ input {
 input:focus {
   outline: none;
 }
+button:focus {
+  outline: none;
+}
 
 
 /**  Buttons  **/
 button {
   padding: 8px 12px;
   margin: 5%;
-  border: 2px solid aqua;
+  border: none;
   border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
   color: white;
-  background: black;
+  background-color: transparent;
   cursor: pointer;
-  transition: all .3s;
+  transition: ease-out 0.3s;
   width: 40%;
 }
 .inActive {
-  padding: 8px 12px;
-  margin: 5%;
-  border: 2px solid aqua;
-  border-radius: 6px;
-  color: white;
-  background: black;
-  cursor: no-drop;
-  transition: all .3s;
-  width: 40%;
+  cursor: not-allowed;
 }
 .inActive.active {
   cursor: pointer;
-  transition: all .3s;
 }
 button:hover {
-  background: aqua;
-  border: 2px solid black;
-  color: black;
+  transition: ease-in 0.5s;
+  transform: scale(1.2);
 }
 .altButton {
   margin: 2px 25%;
@@ -168,7 +182,6 @@ button:hover {
   color: white;
   background: black;
   cursor:pointer;
-  transition:all .3s;
   width: 50%;
   border:2px solid red;
 }
@@ -176,4 +189,15 @@ button:hover {
   background:red;
   border: 2px solid black;
   color: black;
+}
+
+
+/**  Images  **/
+.settings {
+  position: fixed;
+  top: 20px; left: 20px;
+  z-index: 3;
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
 }

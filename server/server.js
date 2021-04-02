@@ -22,6 +22,8 @@ initializePassport(
   id => Users.findOne({ id }).then(data => data)
 )
 
+let user = {};
+
 app.set('view-engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
@@ -38,13 +40,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
+// passport.serializeUser(function(user, done) {
+//   done(null, user);
+// });
 
+// passport.deserializeUser(function(user, done) {
+//   done(null, user);
+// });
 /************************************************************/
 // Authentication routes
 /************************************************************/
 
-app.get('/', checkAuthenticated, (req, res) => {
-  res.render('index.ejs', { name: req.user.name });
+app.get('/', checkAuthenticated, async (req, res) => {
+  res.render('index.ejs', { name: req.user.userName });
+  user = await req.user;
+  setTimeout(() => {
+    console.log(user)
+  }, 1000)
 });
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
@@ -102,6 +114,14 @@ function checkNotAuthenticated(req, res, next) {
 /************************************************************/
 // Application routes
 /************************************************************/
+
+app.get('/user', (req, res) => {
+  res.status(200).send({
+    username: user.userName,
+    id: user._id
+  })
+
+});
 
 app.get('/api/boards/:name', async (req, res) => {
   Board.findOne({

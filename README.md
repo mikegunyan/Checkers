@@ -4,13 +4,12 @@
   ### Create .env file and assign the following variable
   SESSION_SECRET=??
 
+  ### Install dependencies
+  npm install
+
   ### Fix express
   -Navigate to node_modules/express/lib/application.js
   -replace all 'views' instances with 'public'
-
-  ## run the folliwing in the terminal
-  ### Install dependencies
-  npm install
 
   ### Seed Database
   npm run seed
