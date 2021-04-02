@@ -45,18 +45,22 @@ class App extends React.Component {
   makeBoard(name) {
     axios.get(`/api/boards/${name}`)
       .then((data) => {
-        this.setState({
-          board: data.data.board, black: data.data.black, red: data.data.red, turn: data.data.turn, autoJumpRed: data.data.autoJumpRed, autoJumpBlack: data.data.autoJumpBlack, playerOne: data.data.playerOne, playerTwo: data.data.playerTwo, victory: '',
-        });
-      });
-    axios.get('/api/games')
-      .then((data) => {
-        this.setState({ gameList: data.data[0].games });
+        return data.data;
       })
-      .then(() => {
+      .then((data) => {
         axios.get('/user')
+          .then((user) => {
+            data.username = user.data.username;
+            data.id = user.data.id;
+            return data;
+          })
           .then((data) => {
-            this.setState({ playerOne: data.data.username, id: data.data.id });
+            axios.get('/api/games')
+              .then((games) => {
+                console.log(games)
+                this.setState({
+                  board: data.board, black: data.black, red: data.red, turn: data.turn, autoJumpRed: data.autoJumpRed, autoJumpBlack: data.autoJumpBlack, playerOne: data.playerOne, playerTwo: data.playerTwo, victory: '', playerOne: data.username, id: data.id, gameList: games.data[0].games });
+              });
           });
       });
   }
