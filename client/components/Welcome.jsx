@@ -73,7 +73,7 @@ class Welcome extends React.Component {
             <h2>Select Game</h2>
             <div>
               {gameList.map((game) => (
-                <button key={Math.random() * (1000) - 1} name={game} className="altButton" type="button" onClick={this.startGame}>{game}</button>
+                <button key={Math.random() * (1000) - 1} name={game.name} className="altButton" type="button" onClick={this.startGame}>{game.name}</button>
               ))}
             </div>
             <button className="altButton" type="button" onClick={this.changeView}>Back to Welcome Page</button>

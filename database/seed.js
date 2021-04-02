@@ -87,7 +87,8 @@ const newBoard = {
 };
 
 const testBoard = {
-  name: 'Test One v Test Two',
+  _id: '111111111111111111111111',
+  name: 'Test',
   board: [
     [[null, 'redSquare', ''],
       [null, 'blackSquare', ''],
@@ -171,18 +172,22 @@ const testBoard = {
 };
 
 const gameList = {
-  id: 0,
-  games: ['Test One v Test Two'],
+  _id: '60676bd61029f4fc9cd84a00',
+  games: [{
+    name: 'Test',
+    gameId: '111111111111111111111111',
+  }],
 };
 
 
 const user = {
+  _id: '60676bd61029f4fc9cd84a00',
   id: '1617152727626',
   firstName: 'Test',
   lastName: 'Test',
   email: 'test@test.com',
   userName: 'Test',
-  password: '$2b$10$IldQFWfbHhLWgQQT1TAM9ez2qJftqQ5kxzzIUfWv.4lluEfWIXVru',
+  password: '$2b$10$hjXJ19Q3LeX.IJ9fB4Jhb.FpbGMRwNFQjefShHsEVQNOPplbfEjuO',
 };
 
 const makeBoard = () => {
