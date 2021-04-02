@@ -1,11 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import Start from './Start';
+import Welcome from './Welcome';
+import Settings from './settings';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
+      settings: false,
       board: [],
       black: 12,
       red: 12,
@@ -20,6 +23,7 @@ class App extends React.Component {
       playerTwo: 'Player Two',
     };
     this.makeBoard = this.makeBoard.bind(this);
+    this.settings = this.settings.bind(this);
     this.saveGame = this.saveGame.bind(this);
     this.changeGame = this.changeGame.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -48,7 +52,18 @@ class App extends React.Component {
     axios.get('/api/games')
       .then((data) => {
         this.setState({ gameList: data.data[0].games });
+      })
+      .then(() => {
+        axios.get('/user')
+          .then((data) => {
+            this.setState({ playerOne: data.data.username, id: data.data.id });
+          });
       });
+  }
+
+  settings() {
+    const { settings } = this.state;
+    this.setState({ settings: !settings });
   }
 
   saveGame() {
@@ -86,8 +101,8 @@ class App extends React.Component {
     this.setState({ victory: '' });
   }
 
-  players(one, two) {
-    this.setState({ playerOne: one, playerTwo: two });
+  players(two) {
+    this.setState({ playerTwo: two });
   }
 
   moveSelected(event) {
@@ -412,7 +427,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { board, turn, modal, gameList, playerOne, playerTwo, victory,
+    const { board, turn, modal, gameList, playerOne, playerTwo, victory, settings,
     } = this.state;
     const playersTurn = () => {
       if (turn === 'black') {
@@ -426,35 +441,28 @@ class App extends React.Component {
       }
       if (square[0] === 'x') {
         return (
-          <img name={`${index}${i}`} className="piece" alt="" src="https://cdn0.iconfinder.com/data/icons/board-games/48/Paul-14-512.png" />
+          <img name={`${index}${i}`} className="piece" alt="" src="images/redPiece.png" />
         );
       }
       if (square[0] === 'X') {
         return (
-          <img name={`${index}${i}`} className="king" alt="" src="https://cdn0.iconfinder.com/data/icons/board-games/48/Paul-14-512.png" />
+          <img name={`${index}${i}`} className="king" alt="" src="images/kingRedPiece.png" />
         );
       }
       if (square[0] === 'O') {
         return (
-          <img name={`${index}${i}`} className="king" alt="" src="https://cdn4.iconfinder.com/data/icons/board-games-glyph/48/Games_BoardGames_Artboard_14-512.png" />
+          <img name={`${index}${i}`} className="king" alt="" src="images/kingBlackPiece.png" />
         );
       }
       return (
-        <img name={`${index}${i}`} className="piece" alt="" src="https://cdn4.iconfinder.com/data/icons/board-games-glyph/48/Games_BoardGames_Artboard_14-512.png" />
+        <img name={`${index}${i}`} className="piece" alt="" src="images/blackPiece.png" />
       );
     };
     return (
       <div>
+        <img onClick={this.settings} className="settings" src="images/settings.png"/>
         <div className="head">
-          <h5>
-            Your turn
-            {playersTurn()}
-            !
-          </h5>
-        </div>
-        <div className="buttonContainer">
-          <button className="save" type="button" onClick={this.saveGame}>Save Game</button>
-          <button className="save" type="button" onClick={this.changeGame}>Change Game</button>
+          <h5>{`Your turn ${playersTurn()}!`}</h5>
         </div>
         <div>
           {board.map((row, index) => (
@@ -474,7 +482,16 @@ class App extends React.Component {
           ))}
         </div>
 
-        <Start
+        <Settings
+          saveGame={this.saveGame}
+          changeGame={this.changeGame}
+          exit={this.settings}
+          modal={modal}
+          settings={settings}
+        />
+
+        <Welcome
+          username={playerOne}
           makeBoard={this.makeBoard}
           modal={modal}
           victory={victory}

@@ -1,10 +1,10 @@
 import React from 'react';
 
-class Start extends React.Component {
+class Welcome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      playerOne: 'Player One',
+      playerOne: '',
       playerTwo: 'Player Two',
       savedView: false,
     };
@@ -41,13 +41,13 @@ class Start extends React.Component {
   players() {
     const { playerOne, playerTwo } = this.state;
     const { players, onClose } = this.props;
-    players(playerOne, playerTwo);
+    players(playerTwo);
     onClose();
   }
 
   render() {
     const { playerOne, playerTwo, savedView } = this.state;
-    const { modal, gameList, victory } = this.props;
+    const { username, modal, gameList, victory } = this.props;
     if (!modal) {
       return null;
     }
@@ -59,10 +59,7 @@ class Start extends React.Component {
             <div className="formBox">
               <h2>Select Game</h2>
               <div>
-                <h1>
-                  {victory}
-                  wins!!!
-                </h1>
+                <h1>{`${victory} wins!!!`}</h1>
               </div>
               <button className="altButton" type="button" onClick={this.changeVictory}>Back to Welcome Page</button>
             </div>
@@ -88,11 +85,8 @@ class Start extends React.Component {
       <div className="modalBackground">
         <div className="head"><h2>Checkers</h2></div>
         <div className="formBox">
+          <h1>{`Welcome ${username}!`}</h1>
           <h2>Start Game</h2>
-          <label htmlFor="playerOne">
-            Player One Name:
-            <input type="text" id="playerOne" onChange={this.handleChange} value={playerOne} />
-          </label>
           <label htmlFor="playerTwo">
             Player Two Name:
             <input type="text" id="playerTwo" onChange={this.handleChange} value={playerTwo} />
@@ -107,4 +101,4 @@ class Start extends React.Component {
   }
 }
 
-export default Start;
+export default Welcome;
