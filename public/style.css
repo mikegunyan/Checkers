@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(100, 100, 100);
+  background-image: url('images/background.jpeg');
 }
 .head {
   margin: 0px 25%;
@@ -28,7 +28,9 @@ body {
 }
 .redSquare {
   cursor: pointer;
-  background-color: rgb(255,165,79);
+  background-image: url('images/light.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
   font-size: 30px;
   height: 50px;
   width: 50px;
@@ -38,7 +40,9 @@ body {
   align-items: center;
 }
 .blackSquare {
-  background-color: rgb(139,90,43);
+  background-image: url('images/dark.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
   font-size: 30px;
   height: 50px;
   width: 50px;
@@ -48,7 +52,10 @@ body {
   align-items: center;
 }
 .selectedSquare {
-  background-color: rgb(150, 150, 150);
+  background-image: url('images/light.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  filter: brightness(70%);
   font-size: 30px;
   height: 50px;
   width: 50px;
@@ -58,7 +65,10 @@ body {
   align-items: center;
 }
 .selectedPiece {
-  background-color: white;
+  background-image: url('images/light.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  filter: brightness(70%);
   transform: scale(1.2);
   border-radius: 25px;
   font-size: 30px;
@@ -80,17 +90,16 @@ body {
 .modalBackground {
   position: fixed;
   top: 0; bottom: 0; left: 0; right: 0;
-  background-color: rgb(100, 100, 100);
-  z-index: 1;
+  background-image: url('images/background.jpeg');
 }
 .settingsBackground {
   position: fixed;
   top: 0; bottom: 0; left: 0; right: 0;
-  background-color: rgb(100, 100, 100);
   z-index: 2;
+  background-image: url('images/background.jpeg');
 }
 .formBox {
-  color: white;
+  color: black;
   display: flex;
   width: 70%;
   margin: 20px;
@@ -98,7 +107,6 @@ body {
   flex-flow: column nowrap;
   margin-left: 25%;
   margin-right: 25%;
-  background-color: rgb(50, 50, 50);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
   border-radius: 10px;
   text-align: center;
@@ -111,10 +119,11 @@ label {
 }
 input {
   width: 75%;
+  margin: 5px 0px;
   padding: 10px;
   border-radius: 25px;
   border:0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
   font-family:'Montserrat',sans-serif;
 }
 .login {
@@ -131,31 +140,22 @@ button {
   margin: 5%;
   border: none;
   border-radius: 6px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
   color: white;
-  background: black;
+  background-color: transparent;
   cursor: pointer;
-  transition: all .3s;
+  transition: ease-out 0.3s;
   width: 40%;
 }
 .inActive {
-  padding: 8px 12px;
-  margin: 5%;
-  border: none;
-  border-radius: 6px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  color: white;
-  background: black;
   cursor: not-allowed;
-  transition: all .3s;
-  width: 40%;
 }
 .inActive.active {
   cursor: pointer;
-  transition: all .3s;
 }
 button:hover {
-  background-color: rgb(100, 100, 100);
+  transition: ease-in 0.5s;
+  transform: scale(1.2);
 }
 .altButton {
   margin: 2px 25%;
@@ -179,7 +179,6 @@ button:hover {
   color: white;
   background: black;
   cursor:pointer;
-  transition:all .3s;
   width: 50%;
   border:2px solid red;
 }
