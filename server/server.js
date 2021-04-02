@@ -54,9 +54,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.get('/', checkAuthenticated, async (req, res) => {
   res.render('index.ejs', { name: req.user.userName });
   user = await req.user;
-  setTimeout(() => {
-    console.log(user)
-  }, 1000)
+  // setTimeout(() => console.log(user), 1000)
 });
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
