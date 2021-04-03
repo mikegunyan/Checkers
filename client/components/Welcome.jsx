@@ -4,7 +4,6 @@ class Welcome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      playerOne: '',
       playerTwo: 'Player Two',
       savedView: false,
     };
@@ -39,14 +38,15 @@ class Welcome extends React.Component {
   }
 
   players() {
-    const { playerOne, playerTwo } = this.state;
-    const { players, onClose } = this.props;
+    const { playerTwo } = this.state;
+    const { players, makeBoard, onClose } = this.props;
     players(playerTwo);
+    makeBoard('newBoard');
     onClose();
   }
 
   render() {
-    const { playerOne, playerTwo, savedView } = this.state;
+    const { playerTwo, savedView } = this.state;
     const { username, modal, gameList, victory } = this.props;
     if (!modal) {
       return null;
@@ -57,7 +57,6 @@ class Welcome extends React.Component {
           <div className="modalBackground">
             <div className="head"><h2>Checkers</h2></div>
             <div className="formBox">
-              <h2>Select Game</h2>
               <div>
                 <h1>{`${victory} wins!!!`}</h1>
               </div>
@@ -73,10 +72,10 @@ class Welcome extends React.Component {
             <h2>Select Game</h2>
             <div>
               {gameList.map((game) => (
-                <button key={Math.random() * (1000) - 1} name={game.name} className="altButton" type="button" onClick={this.startGame}>{game.name}</button>
+                <button key={game.id} name={game.name} className="altButton" type="button" onClick={this.startGame}>{game.name}</button>
               ))}
             </div>
-            <button className="altButton" type="button" onClick={this.changeView}>Back to Welcome Page</button>
+            <button className="altButton back" type="button" onClick={this.changeView}>Back to Welcome Page</button>
           </div>
         </div>
       );
@@ -92,7 +91,7 @@ class Welcome extends React.Component {
             <input type="text" id="playerTwo" onChange={this.handleChange} value={playerTwo} />
           </label>
           <div className="buttonGrid">
-            <button type="button" onClick={this.changeView}>Saved Game</button>
+            <button type="button" onClick={this.changeView}>Saved Games</button>
             <button type="button" onClick={this.players}>New Game</button>
           </div>
         </div>
