@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Welcome from './Welcome';
 import Settings from './settings';
+import Save from './save';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class App extends React.Component {
     this.state = {
       id: '',
       settings: false,
+      saveView: false,
       board: [],
       black: 12,
       red: 12,
@@ -25,6 +27,7 @@ class App extends React.Component {
     this.makeBoard = this.makeBoard.bind(this);
     this.settings = this.settings.bind(this);
     this.saveGame = this.saveGame.bind(this);
+    this.save = this.save.bind(this);
     this.changeGame = this.changeGame.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.changeVictory = this.changeVictory.bind(this);
@@ -70,13 +73,18 @@ class App extends React.Component {
   }
 
   saveGame() {
+    const { saveView } = this.state;
+    this.setState({ saveView: !saveView });
+  }
+
+  save(name) {
     const {
       playerOne, playerTwo, board, black, red,
       turn, autoJumpRed, autoJumpBlack, gameList, id,
     } = this.state;
     axios.post(`/api/games/${id}`, {
       board: {
-        name: `${playerOne} v ${playerTwo}`,
+        name: name === '' ? `${playerOne} v ${playerTwo}` : name,
         board,
         black,
         red,
@@ -430,7 +438,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { board, turn, modal, gameList, playerOne, playerTwo, victory, settings,
+    const { board, turn, modal, gameList, playerOne, playerTwo, victory, settings, saveView,
     } = this.state;
     const playersTurn = () => {
       if (turn === 'black') {
@@ -491,6 +499,12 @@ class App extends React.Component {
           exit={this.settings}
           modal={modal}
           settings={settings}
+        />
+
+        <Save
+          save={this.save}
+          exit={this.saveGame}
+          saveView={saveView}
         />
 
         <Welcome

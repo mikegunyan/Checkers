@@ -57,7 +57,6 @@ class Welcome extends React.Component {
           <div className="modalBackground">
             <div className="head"><h2>Checkers</h2></div>
             <div className="formBox">
-              <h2>Select Game</h2>
               <div>
                 <h1>{`${victory} wins!!!`}</h1>
               </div>
@@ -76,7 +75,7 @@ class Welcome extends React.Component {
                 <button key={Math.random() * (1000) - 1} name={game.name} className="altButton" type="button" onClick={this.startGame}>{game.name}</button>
               ))}
             </div>
-            <button className="altButton" type="button" onClick={this.changeView}>Back to Welcome Page</button>
+            <button className="altButton back" type="button" onClick={this.changeView}>Back to Welcome Page</button>
           </div>
         </div>
       );
@@ -92,7 +91,7 @@ class Welcome extends React.Component {
             <input type="text" id="playerTwo" onChange={this.handleChange} value={playerTwo} />
           </label>
           <div className="buttonGrid">
-            <button type="button" onClick={this.changeView}>Saved Game</button>
+            <button type="button" onClick={this.changeView}>Saved Games</button>
             <button type="button" onClick={this.players}>New Game</button>
           </div>
         </div>
