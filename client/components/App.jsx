@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import Welcome from './Welcome';
+import Welcome from './welcome';
 import Settings from './settings';
 import Save from './save';
 
@@ -11,6 +11,7 @@ class App extends React.Component {
       id: '',
       settings: false,
       saveView: false,
+      savedView: false,
       board: [],
       black: 12,
       red: 12,
@@ -30,6 +31,7 @@ class App extends React.Component {
     this.save = this.save.bind(this);
     this.changeGame = this.changeGame.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.changeWelcomeView = this.changeWelcomeView.bind(this);
     this.changeVictory = this.changeVictory.bind(this);
     this.players = this.players.bind(this);
     this.moveSelected = this.moveSelected.bind(this);
@@ -45,7 +47,7 @@ class App extends React.Component {
     this.makeBoard('000000000000000000000000');
   }
 
-  makeBoard(id) {
+  makeBoard(id, playerTwo) {
     axios.get(`/api/boards/${id}`)
       .then((data) => {
         return data.data;
@@ -53,6 +55,9 @@ class App extends React.Component {
       .then((data) => {
         axios.get('/user')
           .then((user) => {
+            if (data.playerTwo === '' && playerTwo !== undefined) {
+              data.playerTwo = playerTwo;
+            }
             data.username = user.data.username;
             data.id = user.data.id;
             return data;
@@ -65,6 +70,11 @@ class App extends React.Component {
               });
           });
       });
+  }
+
+  changeWelcomeView() {
+    const { savedView } = this.state;
+    this.setState({ savedView: !savedView });
   }
 
   settings() {
@@ -113,6 +123,7 @@ class App extends React.Component {
   }
 
   players(two) {
+    console.log(two)
     this.setState({ playerTwo: two });
   }
 
@@ -438,7 +449,8 @@ class App extends React.Component {
   }
 
   render() {
-    const { board, turn, modal, gameList, playerOne, playerTwo, victory, settings, saveView,
+    const { board, turn, modal, gameList, playerOne, playerTwo, victory, settings,
+      savedView, saveView,
     } = this.state;
     const playersTurn = () => {
       if (turn === 'black') {
@@ -512,6 +524,8 @@ class App extends React.Component {
           makeBoard={this.makeBoard}
           modal={modal}
           victory={victory}
+          savedView={savedView}
+          changeView={this.changeWelcomeView}
           changeVictory={this.changeVictory}
           onClose={this.toggleModal}
           players={this.players}

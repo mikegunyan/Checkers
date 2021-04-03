@@ -83,8 +83,8 @@ const newBoard = {
   turn: 'black',
   autoJumpRed: false,
   autoJumpBlack: false,
-  playerOne: 'Player One',
-  playerTwo: 'Player Two',
+  playerOne: '',
+  playerTwo: '',
 };
 
 const testBoard = {
