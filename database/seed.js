@@ -3,6 +3,7 @@ const Games = require('./gamesList.js');
 const Users = require('./users.js');
 
 const newBoard = {
+  _id: '000000000000000000000000',
   name: 'newBoard',
   board: [
     [['x', 'redSquare', 'selectRed'],

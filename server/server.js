@@ -125,13 +125,10 @@ app.get('/user', (req, res) => {
     username: user.userName,
     id: user._id
   })
-
 });
 
-app.get('/api/boards/:name', async (req, res) => {
-  Board.findOne({
-    name: req.params.name,
-  })
+app.get('/api/boards/:id', async (req, res) => {
+  Board.findById(req.params.id)
     .then((data) => res.status(200).send(data))
     .catch((err) => res.send(err));
 });

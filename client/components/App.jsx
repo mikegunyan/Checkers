@@ -42,11 +42,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.makeBoard('newBoard');
+    this.makeBoard('000000000000000000000000');
   }
 
-  makeBoard(name) {
-    axios.get(`/api/boards/${name}`)
+  makeBoard(id) {
+    axios.get(`/api/boards/${id}`)
       .then((data) => {
         return data.data;
       })
@@ -100,7 +100,7 @@ class App extends React.Component {
 
   changeGame() {
     this.toggleModal();
-    this.makeBoard('newBoard');
+    this.makeBoard('000000000000000000000000');
   }
 
   toggleModal() {

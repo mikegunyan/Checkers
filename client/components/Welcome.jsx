@@ -41,7 +41,7 @@ class Welcome extends React.Component {
     const { playerTwo } = this.state;
     const { players, makeBoard, onClose } = this.props;
     players(playerTwo);
-    makeBoard('newBoard');
+    makeBoard('000000000000000000000000');
     onClose();
   }
 
@@ -72,7 +72,7 @@ class Welcome extends React.Component {
             <h2>Select Game</h2>
             <div>
               {gameList.map((game) => (
-                <button key={game.id} name={game.name} className="altButton" type="button" onClick={this.startGame}>{game.name}</button>
+                <button key={game.gameId} name={game.gameId} className="altButton" type="button" onClick={this.startGame}>{game.name}</button>
               ))}
             </div>
             <button className="altButton back" type="button" onClick={this.changeView}>Back to Welcome Page</button>
