@@ -125,6 +125,7 @@ app.get('/user', (req, res) => {
     username: user.userName,
     id: user._id
   })
+
 });
 
 app.get('/api/boards/:id', async (req, res) => {
