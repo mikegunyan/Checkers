@@ -55,8 +55,8 @@ class App extends React.Component {
       .then((data) => {
         axios.get('/user')
           .then((user) => {
-            if (data.playerTwo === '' && playerTwo !== undefined) {
-              data.playerTwo = playerTwo;
+            if (data.playerTwo === '') {
+              data.playerTwo = playerTwo ? playerTwo : '';
             }
             data.username = user.data.username;
             data.id = user.data.id;
@@ -65,6 +65,9 @@ class App extends React.Component {
           .then((data) => {
             axios.get(`/api/games/${data.id}`)
               .then((games) => {
+                if (data.playerTwo === '') {
+                  data.playerTwo = 'Player Two';
+                }
                 this.setState({
                   board: data.board, black: data.black, red: data.red, turn: data.turn, autoJumpRed: data.autoJumpRed, autoJumpBlack: data.autoJumpBlack, playerOne: data.playerOne, playerTwo: data.playerTwo, victory: '', playerOne: data.username, id: data.id, gameList: games.data.games });
               });
