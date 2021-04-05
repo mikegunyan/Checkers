@@ -20,17 +20,11 @@ body {
   max-height: 100px;
   margin: 25px;
 }
-.king {
-  max-width: 100px;
-  max-height: 100px;
-  margin: 25px;
-}
-.redSquare {
+.redSquare, .blackSquare, .selectedSquare,.selectedPiece {
   cursor: pointer;
   background-image: url('images/light.jpg');
   background-repeat: no-repeat;
   background-size: 100%;
-  font-size: 30px;
   height: 50px;
   width: 50px;
   padding: 25px;
@@ -40,45 +34,30 @@ body {
 }
 .blackSquare {
   background-image: url('images/dark.jpg');
-  background-repeat: no-repeat;
-  background-size: 100%;
-  font-size: 30px;
-  height: 50px;
-  width: 50px;
-  padding: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  cursor: auto;
 }
 .selectedSquare {
-  background-image: url('images/light.jpg');
-  background-repeat: no-repeat;
-  background-size: 100%;
   filter: brightness(70%);
-  font-size: 30px;
-  height: 50px;
-  width: 50px;
-  padding: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .selectedPiece {
-  background-image: url('images/light.jpg');
-  background-repeat: no-repeat;
-  background-size: 100%;
   filter: brightness(70%);
   transform: scale(1.2);
   border-radius: 25px;
-  font-size: 30px;
-  height: 50px;
-  width: 50px;
-  padding: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
+
+/**  Modals  **/
+.modalBackground, .settingsBackground, .saveBackground {
+  position: fixed;
+  top: 0; bottom: 0; left: 0; right: 0;
+  background-image: url('images/background.jpeg');
+}
+.settingsBackground {
+  z-index: 2;
+}
+.saveBackground {
+  z-index: 4;
+}
 
 /**  Inputs  **/
 .message {
@@ -88,32 +67,12 @@ body {
   margin: 2px 25%;
   width: 50%;
 }
-.modalBackground {
-  position: fixed;
-  top: 0; bottom: 0; left: 0; right: 0;
-  background-image: url('images/background.jpeg');
-}
-.settingsBackground {
-  position: fixed;
-  top: 0; bottom: 0; left: 0; right: 0;
-  z-index: 2;
-  background-image: url('images/background.jpeg');
-}
-.saveBackground {
-  position: fixed;
-  top: 0; bottom: 0; left: 0; right: 0;
-  z-index: 4;
-  background-image: url('images/background.jpeg');
-}
 .formBox {
   color: black;
   display: flex;
-  width: 70%;
-  margin: 20px;
-  padding: 15px;
   flex-flow: column nowrap;
-  margin-left: 25%;
-  margin-right: 25%;
+  padding: 15px;
+  margin: 0px 25%;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
   border-radius: 10px;
   text-align: center;
@@ -129,22 +88,24 @@ input {
   margin: 5px 0px;
   padding: 10px;
   border-radius: 25px;
-  border:0;
+  border: none;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 1);
   font-family:'Montserrat',sans-serif;
-}
-.login {
-  margin-left: 10%;
 }
 input:focus {
   outline: none;
 }
-button:focus {
-  outline: none;
+.login {
+  margin-left: 10%;
 }
 
 
 /**  Buttons  **/
+.buttonGrid {
+  display: flex;
+  margin: 0px;
+  padding: 0px;
+}
 button {
   padding: 8px 12px;
   margin: 5%;
@@ -157,45 +118,22 @@ button {
   transition: ease-out 0.3s;
   width: 40%;
 }
+button:focus {
+  outline: none;
+}
+button:hover {
+  transition: ease-in 0.5s;
+  transform: scale(1.2);
+}
 .inActive {
   cursor: not-allowed;
 }
 .inActive.active {
   cursor: pointer;
 }
-button:hover {
-  transition: ease-in 0.5s;
-  transform: scale(1.2);
-}
 .altButton {
   margin: 2px 25%;
   width: 50%;
-}
-.buttonContainer {
-  margin: 0px 25%;
-  width: 50%;
-}
-.buttonGrid {
-  display: flex;
-  margin: 0px;
-  padding: 0px;
-}
-.save {
-  float:right;
-  padding:8px 12px;
-  margin: 10px 0%;
-  border:2px solid aqua;
-  border-radius: 6px;
-  color: white;
-  background: black;
-  cursor:pointer;
-  width: 50%;
-  border:2px solid red;
-}
-.save:hover {
-  background:red;
-  border: 2px solid black;
-  color: black;
 }
 .back {
   margin-top: 15px;

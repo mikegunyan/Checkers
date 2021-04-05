@@ -472,12 +472,12 @@ class App extends React.Component {
       }
       if (square[0] === 'X') {
         return (
-          <img name={`${index}${i}`} className="king" alt="" src="images/kingRedPiece.png" />
+          <img name={`${index}${i}`} className="piece" alt="" src="images/kingRedPiece.png" />
         );
       }
       if (square[0] === 'O') {
         return (
-          <img name={`${index}${i}`} className="king" alt="" src="images/kingBlackPiece.png" />
+          <img name={`${index}${i}`} className="piece" alt="" src="images/kingBlackPiece.png" />
         );
       }
       return (
