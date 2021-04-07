@@ -7,7 +7,7 @@ const Welcome = ({ username, modal, gameList, victory, savedView, changeView, ch
   if (savedView) {
     if (victory !== '') {
       return (
-        <div className="modalBackground">
+        <div className="modalBackground victoryBackground">
           <div className="head"><h2>Checkers</h2></div>
           <div className="formBox">
             <div>

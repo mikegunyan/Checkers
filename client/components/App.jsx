@@ -3,12 +3,14 @@ import axios from 'axios';
 import Welcome from './welcome';
 import Settings from './settings';
 import Save from './save';
+import Jump from './jump';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       id: '',
+      nextJump: false,
       settings: false,
       saveView: false,
       savedView: false,
@@ -29,6 +31,13 @@ class App extends React.Component {
     this.settings = this.settings.bind(this);
     this.saveGame = this.saveGame.bind(this);
     this.save = this.save.bind(this);
+    this.toggleJump = this.toggleJump.bind(this);
+    this.skipJump = this.skipJump.bind(this);
+    this.jumpCheckRed = this.jumpCheckRed.bind(this);
+    this.jumpCheckBlack = this.jumpCheckBlack.bind(this);
+    this.checkAutoJumpRed = this.checkAutoJumpRed.bind(this);
+    this.checkAutoJumpBlack = this.checkAutoJumpBlack.bind(this);
+    this.checkNextJumpBlack = this.checkNextJumpBlack.bind(this);
     this.changeGame = this.changeGame.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.changeWelcomeView = this.changeWelcomeView.bind(this);
@@ -90,6 +99,23 @@ class App extends React.Component {
     this.setState({ saveView: !saveView });
   }
 
+  toggleJump() {
+    const { nextJump } = this.state;
+    this.setState({ nextJump: !nextJump });
+  }
+
+  skipJump() {
+    const { turn } = this.state;
+    if (turn === 'red') {
+      this.resetRedJump();
+      this.checkAutoJumpBlack();
+    } else {
+      this.resetBlackJump();
+      this.checkAutoJumpRed();
+    }
+    this.setState({ turn: turn === 'red' ? 'black' : 'red' });
+  }
+
   save(name) {
     const {
       playerOne, playerTwo, board, black, red,
@@ -126,8 +152,157 @@ class App extends React.Component {
   }
 
   players(two) {
-    console.log(two)
     this.setState({ playerTwo: two });
+  }
+
+  checkNextJumpRed(rows, columns) {
+    const { board } = this.state;
+    board[rows][columns][1] = 'selectedPiece';
+    if (rows > 1 && columns > 1 && board[rows - 2][columns - 2] !== undefined && board[rows - 2][columns - 2][0] === null && board[rows][columns][0] === 'X' && (board[rows - 1][columns - 1][0] === 'o' || board[rows - 1][columns - 1][0] === 'O')) {
+      board[rows - 2][columns - 2][1] = 'selectedSquare';
+      board[rows - 2][columns - 2][2] = 'moveSelected';
+    }
+    if (rows > 1 && columns < 6 && board[rows - 2][columns + 2] !== undefined && board[rows - 2][columns + 2][0] === null && board[rows][columns][0] === 'X' && (board[rows - 1][columns + 1][0] === 'o' || board[rows - 1][columns + 1][0] === 'O')) {
+      board[rows - 2][columns + 2][1] = 'selectedSquare';
+      board[rows - 2][columns + 2][2] = 'moveSelected';
+    }
+    if (rows < 6 && columns > 1 && board[rows + 2][columns - 2] !== undefined && board[rows + 2][columns - 2][0] === null && (board[rows + 1][columns - 1][0] === 'o' || board[rows + 1][columns - 1][0] === 'O')) {
+      board[rows + 2][columns - 2][1] = 'selectedSquare';
+      board[rows + 2][columns - 2][2] = 'moveSelected';
+    }
+    if (rows < 6 && columns < 6 && board[rows + 2][columns + 2] !== undefined && board[rows + 2][columns + 2][0] === null && (board[rows + 1][columns + 1][0] === 'o' || board[rows + 1][columns + 1][0] === 'O')) {
+      board[rows + 2][columns + 2][1] = 'selectedSquare';
+      board[rows + 2][columns + 2][2] = 'moveSelected';
+    }
+    this.setState({ selected: [rows, columns] });
+    this.setState({ nextJump: true });
+  }
+
+  checkNextJumpBlack(rows, columns) {
+    const { board } = this.state;
+    board[rows][columns][1] = 'selectedPiece';
+    if (rows > 1 && columns > 1 && board[rows - 2][columns - 2] !== undefined && board[rows - 2][columns - 2][0] === null && (board[rows - 1][columns - 1][0] === 'x' || board[rows - 1][columns - 1][0] === 'X')) {
+      board[rows - 2][columns - 2][1] = 'selectedSquare';
+      board[rows - 2][columns - 2][2] = 'moveSelected';
+    }
+    if (rows > 1 && columns < 6 && board[rows - 2][columns + 2] !== undefined && board[rows - 2][columns + 2][0] === null && (board[rows - 1][columns + 1][0] === 'x' || board[rows - 1][columns + 1][0] === 'X')) {
+      board[rows - 2][columns + 2][1] = 'selectedSquare';
+      board[rows - 2][columns + 2][2] = 'moveSelected';
+    }
+    if (rows < 6 && columns > 1 && board[rows + 2][columns - 2] !== undefined && board[rows + 2][columns - 2][0] === null && board[rows][columns][0] === 'O' && (board[rows + 1][columns - 1][0] === 'x' || board[rows + 1][columns - 1][0] === 'X')) {
+      board[rows + 2][columns - 2][1] = 'selectedSquare';
+      board[rows + 2][columns - 2][2] = 'moveSelected';
+    }
+    if (rows < 6 && columns < 6 && board[rows + 2][columns + 2] !== undefined && board[rows + 2][columns + 2][0] === null && board[rows][columns][0] === 'O' && (board[rows + 1][columns + 1][0] === 'x' || board[rows + 1][columns + 1][0] === 'X')) {
+      board[rows + 2][columns + 2][1] = 'selectedSquare';
+      board[rows + 2][columns + 2][2] = 'moveSelected';
+    }
+    this.setState({ selected: [rows, columns] });
+    this.setState({ nextJump: true });
+  }
+
+  checkAutoJumpRed() {
+    const { board } = this.state;
+    for (let row = 0; row < board.length; row += 1) {
+      for (let column = 0; column < board[row].length; column += 1) {
+        if (board[row][column][0] === 'x' || board[row][column][0] === 'X') {
+          if (board[row][column][0] === 'X') {
+            if ((board[row - 2] && board[row - 2][column - 2] && row > 0 && column > 0 && board[row - 1][column - 1][0] === 'o' && board[row - 2][column - 2][0] === null)
+              || (board[row - 2] && board[row - 2][column - 2] && row > 0 && column > 0 && board[row - 1][column - 1][0] === 'O' && board[row - 2][column - 2][0] === null)
+              || (board[row - 2] && board[row - 2][column + 2] && row > 0 && column < 7 && board[row - 1][column + 1][0] === 'o' && board[row - 2][column + 2][0] === null)
+              || (board[row - 2] && board[row - 2][column + 2] && row > 0 && column < 7 && board[row - 1][column + 1][0] === 'O' && board[row - 2][column + 2][0] === null)) {
+              this.setState({ autoJumpRed: true });
+              break;
+            }
+          }
+          if ((board[row + 2] && board[row + 2][column - 2] && row < 7 && column > 0 && board[row + 1][column - 1][0] === 'o' && board[row + 2][column - 2][0] === null)
+            || (board[row + 2] && board[row + 2][column - 2] && row < 7 && column > 0 && board[row + 1][column - 1][0] === 'O' && board[row + 2][column - 2][0] === null)
+            || (board[row + 2] && board[row + 2][column + 2] && row < 7 && column < 7 && board[row + 1][column + 1][0] === 'o' && board[row + 2][column + 2][0] === null)
+            || (board[row + 2] && board[row + 2][column + 2] && row < 7 && column < 7 && board[row + 1][column + 1][0] === 'O' && board[row + 2][column + 2][0] === null)) {
+            this.setState({ autoJumpRed: true });
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  checkAutoJumpBlack() {
+    const { board } = this.state;
+    for (let row = 0; row < board.length; row += 1) {
+      for (let column = 0; column < board[row].length; column += 1) {
+        if (board[row][column][0] === 'o' || board[row][column][0] === 'O') {
+          if (board[row][column][0] === 'O') {
+            if ((board[row + 2] && board[row + 2][column - 2] && row < 7 && column > 0 && board[row + 1][column - 1][0] === 'X' && board[row + 2][column - 2][0] === null)
+            || (board[row + 2] && board[row + 2][column + 2] && row < 7 && column < 7 && board[row + 1][column + 1][0] === 'X' && board[row + 2][column + 2][0] === null)
+            || (board[row + 2] && board[row + 2][column - 2] && row < 7 && column > 0 && board[row + 1][column - 1][0] === 'x' && board[row + 2][column - 2][0] === null)
+            || (board[row + 2] && board[row + 2][column + 2] && row < 7 && column < 7 && board[row + 1][column + 1][0] === 'x' && board[row + 2][column + 2][0] === null)) {
+              this.setState({ autoJumpBlack: true });
+              break;
+            }
+          }
+          if ((board[row - 2] && board[row - 2][column - 2] && row > 0 && column > 0 && board[row - 1][column - 1][0] === 'X' && board[row - 2][column - 2][0] === null)
+            || (board[row - 2] && board[row - 2][column + 2] && row > 0 && column < 7 && board[row - 1][column + 1][0] === 'X' && board[row - 2][column + 2][0] === null)
+            || (board[row - 2] && board[row - 2][column - 2] && row > 0 && column > 0 && board[row - 1][column - 1][0] === 'x' && board[row - 2][column - 2][0] === null)
+            || (board[row - 2] && board[row - 2][column + 2] && row > 0 && column < 7 && board[row - 1][column + 1][0] === 'x' && board[row - 2][column + 2][0] === null)) {
+            this.setState({ autoJumpBlack: true });
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  jumpCheckRed(rows, columns) {
+    const { board } = this.state;
+    let isDouble = false;
+    if (board[rows][columns][0] === 'X') {
+      if ((board[rows - 2] && board[rows - 2][columns - 2] && rows > 0 && columns > 0 && board[rows - 1][columns - 1][0] === 'o' && board[rows - 2][columns - 2][0] === null)
+        || (board[rows - 2] && board[rows - 2][columns - 2] && rows > 0 && columns > 0 && board[rows - 1][columns - 1][0] === 'O' && board[rows - 2][columns - 2][0] === null)
+        || (board[rows - 2] && board[rows - 2][columns + 2] && rows > 0 && columns < 7 && board[rows - 1][columns + 1][0] === 'o' && board[rows - 2][columns + 2][0] === null)
+        || (board[rows - 2] && board[rows - 2][columns + 2] && rows > 0 && columns < 7 && board[rows - 1][columns + 1][0] === 'O' && board[rows - 2][columns + 2][0] === null)) {
+        // this.setState({ autoJumpRed: true });
+        // break;
+        this.checkNextJumpRed(rows, columns);
+        isDouble = true;
+      }
+    }
+    if ((board[rows + 2] && board[rows + 2][columns - 2] && rows < 7 && columns > 0 && board[rows + 1][columns - 1][0] === 'o' && board[rows + 2][columns - 2][0] === null)
+      || (board[rows + 2] && board[rows + 2][columns - 2] && rows < 7 && columns > 0 && board[rows + 1][columns - 1][0] === 'O' && board[rows + 2][columns - 2][0] === null)
+      || (board[rows + 2] && board[rows + 2][columns + 2] && rows < 7 && columns < 7 && board[rows + 1][columns + 1][0] === 'o' && board[rows + 2][columns + 2][0] === null)
+      || (board[rows + 2] && board[rows + 2][columns + 2] && rows < 7 && columns < 7 && board[rows + 1][columns + 1][0] === 'O' && board[rows + 2][columns + 2][0] === null)) {
+      // this.setState({ autoJumpRed: true });
+      // break;
+      this.checkNextJumpRed(rows, columns);
+      isDouble = true;
+    }
+    return isDouble;
+  }
+
+  jumpCheckBlack(rows, columns) {
+    const { board } = this.state;
+    let isDouble = false;
+    if (board[rows][columns][0] === 'O') {
+      if ((board[rows + 2] && board[rows + 2][columns - 2] && rows < 7 && columns > 0 && board[rows + 1][columns - 1][0] === 'x' && board[rows + 2][columns - 2][0] === null)
+        || (board[rows + 2] && board[rows + 2][columns - 2] && rows < 7 && columns > 0 && board[rows + 1][columns - 1][0] === 'X' && board[rows + 2][columns - 2][0] === null)
+        || (board[rows + 2] && board[rows + 2][columns + 2] && rows < 7 && columns < 7 && board[rows + 1][columns + 1][0] === 'x' && board[rows + 2][columns + 2][0] === null)
+        || (board[rows + 2] && board[rows + 2][columns + 2] && rows < 7 && columns < 7 && board[rows + 1][columns + 1][0] === 'X' && board[rows + 2][columns + 2][0] === null)) {
+        // this.setState({ autoJumpBlack: true });
+        // break;
+        this.checkNextJumpBlack(rows, columns);
+        isDouble = true;
+      }
+    }
+    if ((board[rows - 2] && board[rows - 2][columns - 2] && rows > 0 && columns > 0 && board[rows - 1][columns - 1][0] === 'x' && board[rows - 2][columns - 2][0] === null)
+      || (board[rows - 2] && board[rows - 2][columns - 2] && rows > 0 && columns > 0 && board[rows - 1][columns - 1][0] === 'X' && board[rows - 2][columns - 2][0] === null)
+      || (board[rows - 2] && board[rows - 2][columns + 2] && rows > 0 && columns < 7 && board[rows - 1][columns + 1][0] === 'x' && board[rows - 2][columns + 2][0] === null)
+      || (board[rows - 2] && board[rows - 2][columns + 2] && rows > 0 && columns < 7 && board[rows - 1][columns + 1][0] === 'X' && board[rows - 2][columns + 2][0] === null)) {
+      // this.setState({ autoJumpBlack: true });
+      // break;
+      this.checkNextJumpBlack(rows, columns);
+      isDouble = true;
+    }
+    return isDouble;
   }
 
   moveSelected(event) {
@@ -140,6 +315,7 @@ class App extends React.Component {
     const columns = Number(target.charAt(1));
     const to = board[rows][columns];
     const from = board[selected[0]][selected[1]];
+    let isDouble = false;
     board[rows][columns] = from;
     board[selected[0]][selected[1]] = to;
     board[rows][columns][1] = 'redSquare';
@@ -158,31 +334,13 @@ class App extends React.Component {
           this.setState((prevState) => ({ red: prevState.red - 1 }));
           this.resetBlackJump();
         }
+        isDouble = this.jumpCheckBlack(rows, columns);
       } else {
         this.resetBlack();
       }
-      this.setState({ turn: 'red', autoJumpBlack: false });
-      for (let row = 0; row < board.length; row += 1) {
-        for (let column = 0; column < board[row].length; column += 1) {
-          if (board[row][column][0] === 'x' || board[row][column][0] === 'X') {
-            if (board[row][column][0] === 'X') {
-              if ((row > 0 && column > 0 && board[row - 1][column - 1][0] === 'o' && board[row - 2][column - 2][0] === null)
-                || (row > 0 && column > 0 && board[row - 1][column - 1][0] === 'O' && board[row - 2][column - 2][0] === null)
-                || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'o' && board[row - 2][column + 2][0] === null)
-                || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'O' && board[row - 2][column + 2][0] === null)) {
-                this.setState({ autoJumpRed: true });
-                break;
-              }
-            }
-            if ((row < 7 && column > 0 && board[row + 1][column - 1][0] === 'o' && board[row + 2][column - 2][0] === null)
-              || (row < 7 && column > 0 && board[row + 1][column - 1][0] === 'O' && board[row + 2][column - 2][0] === null)
-              || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'o' && board[row + 2][column + 2][0] === null)
-              || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'O' && board[row + 2][column + 2][0] === null)) {
-              this.setState({ autoJumpRed: true });
-              break;
-            }
-          }
-        }
+      if (!isDouble) {
+        this.setState({ turn: 'red', autoJumpBlack: false });
+        this.checkAutoJumpRed();
       }
     } else {
       if (rows === 7) {
@@ -198,31 +356,13 @@ class App extends React.Component {
           this.setState((prevState) => ({ black: prevState.black - 1 }));
           this.resetRedJump();
         }
+        isDouble = this.jumpCheckRed(rows, columns);
       } else {
         this.resetRed();
       }
-      this.setState({ turn: 'black', autoJumpRed: false });
-      for (let row = 0; row < board.length; row += 1) {
-        for (let column = 0; column < board[row].length; column += 1) {
-          if (board[row][column][0] === 'o' || board[row][column][0] === 'O') {
-            if (board[row][column][0] === 'O') {
-              if ((row < 7 && column > 0 && board[row + 1][column - 1][0] === 'X' && board[row + 2][column - 2][0] === null)
-              || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'X' && board[row + 2][column + 2][0] === null)
-              || (row < 7 && column > 0 && board[row + 1][column - 1][0] === 'x' && board[row + 2][column - 2][0] === null)
-              || (row < 7 && column < 7 && board[row + 1][column + 1][0] === 'x' && board[row + 2][column + 2][0] === null)) {
-                this.setState({ autoJumpBlack: true });
-                break;
-              }
-            }
-            if ((row > 0 && column > 0 && board[row - 1][column - 1][0] === 'X' && board[row - 2][column - 2][0] === null)
-              || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'X' && board[row - 2][column + 2][0] === null)
-              || (row > 0 && column > 0 && board[row - 1][column - 1][0] === 'x' && board[row - 2][column - 2][0] === null)
-              || (row > 0 && column < 7 && board[row - 1][column + 1][0] === 'x' && board[row - 2][column + 2][0] === null)) {
-              this.setState({ autoJumpBlack: true });
-              break;
-            }
-          }
-        }
+      if (!isDouble) {
+        this.setState({ turn: 'black', autoJumpRed: false });
+        this.checkAutoJumpBlack();
       }
     }
   }
@@ -453,7 +593,7 @@ class App extends React.Component {
 
   render() {
     const { board, turn, modal, gameList, playerOne, playerTwo, victory, settings,
-      savedView, saveView,
+      savedView, saveView, nextJump,
     } = this.state;
     const playersTurn = () => {
       if (turn === 'black') {
@@ -520,6 +660,12 @@ class App extends React.Component {
           save={this.save}
           exit={this.saveGame}
           saveView={saveView}
+        />
+
+        <Jump
+          nextJump={nextJump}
+          toggleJump={this.toggleJump}
+          skipJump={this.skipJump}
         />
 
         <Welcome
