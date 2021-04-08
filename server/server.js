@@ -71,28 +71,29 @@ app.get('/register', checkNotAuthenticated, (req, res) => {
 });
 
 app.post('/register', checkNotAuthenticated, async (req, res) => {
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10)
-    Users.create({
-      id: Date.now().toString(),
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      userName: req.body.userName,
-      password: hashedPassword
-    })
-      .then((data) => {
-        Games.create({
-          _id: data._id,
-          games: []
+  const hashedPassword = await bcrypt.hash(req.body.password, 10)
+  Users.findOne({email: req.body.email})
+    .then((data) => {
+      if (!data) {
+        Users.create({
+          id: Date.now().toString(),
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          userName: req.body.userName,
+          password: hashedPassword
         })
-        .then(() => res.sendStatus(204))
-        .catch((err) => res.send(err));
-      });
-    res.redirect('/login');
-  } catch {
-    res.redirect('/register');
-  }
+          .then((data) => {
+            Games.create({
+              _id: data._id,
+              games: []
+            })
+          });
+        res.redirect('/login');
+      }
+    })
+    .then(() => res.sendStatus(204))
+    .catch((err) => res.send(err));
 });
 
 app.delete('/logout', (req, res) => {

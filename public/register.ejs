@@ -25,11 +25,14 @@
           <label for="confirm">Confirm Password:</label>
           <input onkeyup="validateConfirm()" disabled class="inActiveInput login" type="password" id="confirm" name="confirm" required>
           <div class="buttonGrid">
-            <button disabled class="inActive" type="submit">Register User</button>
-            <button class="active" onclick="window.location.href='/login'">Back to Login</button>
+            <button disabled class="inActive" type="submit" onClick="displayExistingEmail()">Register User</button>
+            <button class="active" type="button" onclick="window.location.href='/login'">Back to Login</button>
           </div>
         </form>
         <script>
+          const displayExistingEmail = () => {
+            document.getElementsByClassName('message')[0].innerText = 'User exists at that email address!';
+          }
           const validateEmail = () => {
             const email = document.formBox.email.value;
             const at = email.indexOf('@');
