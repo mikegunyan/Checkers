@@ -56,6 +56,10 @@ app.get('/', checkAuthenticated, async (req, res) => {
   user = await req.user;
 });
 
+app.get('/guest', (req, res) => {
+  res.render('guest.ejs');
+});
+
 app.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
