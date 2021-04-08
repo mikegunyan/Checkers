@@ -59,7 +59,7 @@ body {
   z-index: 4;
 }
 .victoryBackground {
-  z-index: 4;
+  z-index: 5;
 }
 .jumpBackground {
   position: fixed;

@@ -23,6 +23,7 @@ class App extends React.Component {
       autoJumpBlack: false,
       modal: true,
       victory: '',
+      victoryMessage: '',
       gameList: [],
       playerOne: 'Player One',
       playerTwo: 'Player Two',
@@ -33,6 +34,8 @@ class App extends React.Component {
     this.save = this.save.bind(this);
     this.toggleJump = this.toggleJump.bind(this);
     this.skipJump = this.skipJump.bind(this);
+    this.checkTurnRed = this.checkTurnRed.bind(this);
+    this.checkTurnBlack = this.checkTurnBlack.bind(this);
     this.jumpCheckRed = this.jumpCheckRed.bind(this);
     this.jumpCheckBlack = this.jumpCheckBlack.bind(this);
     this.checkAutoJumpRed = this.checkAutoJumpRed.bind(this);
@@ -113,7 +116,7 @@ class App extends React.Component {
       this.resetBlackJump();
       this.checkAutoJumpRed();
     }
-    this.setState({ turn: turn === 'red' ? 'black' : 'red' });
+    this.setState({ turn: turn === 'red' ? 'black' : 'red' })
   }
 
   save(name) {
@@ -148,7 +151,7 @@ class App extends React.Component {
   }
 
   changeVictory() {
-    this.setState({ victory: '' });
+    this.setState({ victory: '', victoryMessage: '' });
   }
 
   players(two) {
@@ -199,6 +202,64 @@ class App extends React.Component {
     }
     this.setState({ selected: [rows, columns] });
     this.setState({ nextJump: true });
+  }
+
+  checkTurnRed() {
+    const { board } = this.state;
+    for (let row = 0; row < board.length; row += 1) {
+      for (let column = 0; column < board[row].length; column += 1) {
+        if (board[row][column][0] === 'x' || board[row][column][0] === 'X') {
+          if (board[row][column][0] === 'X') {
+            if ((board[row - 2] && board[row - 2][column - 2] && row > 0 && column > 0 && board[row - 1][column - 1][0] === 'o' && board[row - 2][column - 2][0] === null)
+              || (board[row - 2] && board[row - 2][column - 2] && row > 0 && column > 0 && board[row - 1][column - 1][0] === 'O' && board[row - 2][column - 2][0] === null)
+              || (board[row - 2] && board[row - 2][column + 2] && row > 0 && column < 7 && board[row - 1][column + 1][0] === 'o' && board[row - 2][column + 2][0] === null)
+              || (board[row - 2] && board[row - 2][column + 2] && row > 0 && column < 7 && board[row - 1][column + 1][0] === 'O' && board[row - 2][column + 2][0] === null)
+              || (board[row - 1] && board[row - 1][column - 1] && board[row - 1][column - 1][0] === null)
+              || (board[row - 1] && board[row - 1][column + 1] && board[row - 1][column + 1][0] === null)) {
+              return true;
+            }
+          }
+          if ((board[row + 2] && board[row + 2][column - 2] && row < 7 && column > 0 && board[row + 1][column - 1][0] === 'o' && board[row + 2][column - 2][0] === null)
+            || (board[row + 2] && board[row + 2][column - 2] && row < 7 && column > 0 && board[row + 1][column - 1][0] === 'O' && board[row + 2][column - 2][0] === null)
+            || (board[row + 2] && board[row + 2][column + 2] && row < 7 && column < 7 && board[row + 1][column + 1][0] === 'o' && board[row + 2][column + 2][0] === null)
+            || (board[row + 2] && board[row + 2][column + 2] && row < 7 && column < 7 && board[row + 1][column + 1][0] === 'O' && board[row + 2][column + 2][0] === null)
+            || (board[row + 1] && board[row + 1][column - 1] && board[row + 1][column - 1][0] === null)
+            || (board[row + 1] && board[row + 1][column + 1] && board[row + 1][column + 1][0] === null)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  checkTurnBlack() {
+    const { board } = this.state;
+    for (let row = 0; row < board.length; row += 1) {
+      for (let column = 0; column < board[row].length; column += 1) {
+        if (board[row][column][0] === 'o' || board[row][column][0] === 'O') {
+          if (board[row][column][0] === 'O') {
+            if ((board[row + 2] && board[row + 2][column - 2] && row < 7 && column > 0 && board[row + 1][column - 1][0] === 'X' && board[row + 2][column - 2][0] === null)
+            || (board[row + 2] && board[row + 2][column + 2] && row < 7 && column < 7 && board[row + 1][column + 1][0] === 'X' && board[row + 2][column + 2][0] === null)
+            || (board[row + 2] && board[row + 2][column - 2] && row < 7 && column > 0 && board[row + 1][column - 1][0] === 'x' && board[row + 2][column - 2][0] === null)
+            || (board[row + 2] && board[row + 2][column + 2] && row < 7 && column < 7 && board[row + 1][column + 1][0] === 'x' && board[row + 2][column + 2][0] === null)
+            || (board[row + 1] && board[row + 1][column - 1] && board[row + 1][column - 1][0] === null)
+            || (board[row + 1] && board[row + 1][column + 1] && board[row + 1][column + 1][0] === null)) {
+              return true;
+            }
+          }
+          if ((board[row - 2] && board[row - 2][column - 2] && row > 0 && column > 0 && board[row - 1][column - 1][0] === 'X' && board[row - 2][column - 2][0] === null)
+            || (board[row - 2] && board[row - 2][column + 2] && row > 0 && column < 7 && board[row - 1][column + 1][0] === 'X' && board[row - 2][column + 2][0] === null)
+            || (board[row - 2] && board[row - 2][column - 2] && row > 0 && column > 0 && board[row - 1][column - 1][0] === 'x' && board[row - 2][column - 2][0] === null)
+            || (board[row - 2] && board[row - 2][column + 2] && row > 0 && column < 7 && board[row - 1][column + 1][0] === 'x' && board[row - 2][column + 2][0] === null)
+            || (board[row - 1] && board[row - 1][column - 1] && board[row - 1][column - 1][0] === null)
+            || (board[row - 1] && board[row - 1][column + 1] && board[row - 1][column + 1][0] === null)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   checkAutoJumpRed() {
@@ -261,8 +322,6 @@ class App extends React.Component {
         || (board[rows - 2] && board[rows - 2][columns - 2] && rows > 0 && columns > 0 && board[rows - 1][columns - 1][0] === 'O' && board[rows - 2][columns - 2][0] === null)
         || (board[rows - 2] && board[rows - 2][columns + 2] && rows > 0 && columns < 7 && board[rows - 1][columns + 1][0] === 'o' && board[rows - 2][columns + 2][0] === null)
         || (board[rows - 2] && board[rows - 2][columns + 2] && rows > 0 && columns < 7 && board[rows - 1][columns + 1][0] === 'O' && board[rows - 2][columns + 2][0] === null)) {
-        // this.setState({ autoJumpRed: true });
-        // break;
         this.checkNextJumpRed(rows, columns);
         isDouble = true;
       }
@@ -271,8 +330,6 @@ class App extends React.Component {
       || (board[rows + 2] && board[rows + 2][columns - 2] && rows < 7 && columns > 0 && board[rows + 1][columns - 1][0] === 'O' && board[rows + 2][columns - 2][0] === null)
       || (board[rows + 2] && board[rows + 2][columns + 2] && rows < 7 && columns < 7 && board[rows + 1][columns + 1][0] === 'o' && board[rows + 2][columns + 2][0] === null)
       || (board[rows + 2] && board[rows + 2][columns + 2] && rows < 7 && columns < 7 && board[rows + 1][columns + 1][0] === 'O' && board[rows + 2][columns + 2][0] === null)) {
-      // this.setState({ autoJumpRed: true });
-      // break;
       this.checkNextJumpRed(rows, columns);
       isDouble = true;
     }
@@ -287,8 +344,6 @@ class App extends React.Component {
         || (board[rows + 2] && board[rows + 2][columns - 2] && rows < 7 && columns > 0 && board[rows + 1][columns - 1][0] === 'X' && board[rows + 2][columns - 2][0] === null)
         || (board[rows + 2] && board[rows + 2][columns + 2] && rows < 7 && columns < 7 && board[rows + 1][columns + 1][0] === 'x' && board[rows + 2][columns + 2][0] === null)
         || (board[rows + 2] && board[rows + 2][columns + 2] && rows < 7 && columns < 7 && board[rows + 1][columns + 1][0] === 'X' && board[rows + 2][columns + 2][0] === null)) {
-        // this.setState({ autoJumpBlack: true });
-        // break;
         this.checkNextJumpBlack(rows, columns);
         isDouble = true;
       }
@@ -297,8 +352,6 @@ class App extends React.Component {
       || (board[rows - 2] && board[rows - 2][columns - 2] && rows > 0 && columns > 0 && board[rows - 1][columns - 1][0] === 'X' && board[rows - 2][columns - 2][0] === null)
       || (board[rows - 2] && board[rows - 2][columns + 2] && rows > 0 && columns < 7 && board[rows - 1][columns + 1][0] === 'x' && board[rows - 2][columns + 2][0] === null)
       || (board[rows - 2] && board[rows - 2][columns + 2] && rows > 0 && columns < 7 && board[rows - 1][columns + 1][0] === 'X' && board[rows - 2][columns + 2][0] === null)) {
-      // this.setState({ autoJumpBlack: true });
-      // break;
       this.checkNextJumpBlack(rows, columns);
       isDouble = true;
     }
@@ -328,19 +381,20 @@ class App extends React.Component {
         const rowToDelete = (rows + selected[0]) / 2;
         const columnToDelete = (columns + selected[1]) / 2;
         board[rowToDelete][columnToDelete] = [null, 'redSquare', ''];
-        if (red === 1) {
-          this.setState({ modal: true, victory: playerOne });
-        } else {
-          this.setState((prevState) => ({ red: prevState.red - 1 }));
-          this.resetBlackJump();
-        }
+        this.setState((prevState) => ({ red: prevState.red - 1 }));
+        this.resetBlackJump();
         isDouble = this.jumpCheckBlack(rows, columns);
       } else {
         this.resetBlack();
       }
       if (!isDouble) {
         this.setState({ turn: 'red', autoJumpBlack: false });
-        this.checkAutoJumpRed();
+        if (this.checkTurnRed()) {
+          this.checkAutoJumpRed();
+        } else {
+          const message = red === 1 ? '' : 'No more turns!';
+          this.setState({ modal: true, savedView: false, victory: playerOne, victoryMessage: message });
+        }
       }
     } else {
       if (rows === 7) {
@@ -350,19 +404,20 @@ class App extends React.Component {
         const rowToDelete = (rows + selected[0]) / 2;
         const columnToDelete = (columns + selected[1]) / 2;
         board[rowToDelete][columnToDelete] = [null, 'redSquare', ''];
-        if (black === 1) {
-          this.setState({ modal: true, victory: playerTwo });
-        } else {
-          this.setState((prevState) => ({ black: prevState.black - 1 }));
-          this.resetRedJump();
-        }
+        this.setState((prevState) => ({ black: prevState.black - 1 }));
+        this.resetRedJump();
         isDouble = this.jumpCheckRed(rows, columns);
       } else {
         this.resetRed();
       }
       if (!isDouble) {
         this.setState({ turn: 'black', autoJumpRed: false });
-        this.checkAutoJumpBlack();
+        if (this.checkTurnBlack()) {
+          this.checkAutoJumpBlack();
+        } else {
+          const message = black === 1 ? '' : 'No more turns!';
+          this.setState({ modal: true, savedView: false, victory: playerTwo, victoryMessage: message });
+        }
       }
     }
   }
@@ -593,7 +648,7 @@ class App extends React.Component {
 
   render() {
     const { board, turn, modal, gameList, playerOne, playerTwo, victory, settings,
-      savedView, saveView, nextJump,
+      savedView, saveView, nextJump, victoryMessage,
     } = this.state;
     const playersTurn = () => {
       if (turn === 'black') {
@@ -673,6 +728,7 @@ class App extends React.Component {
           makeBoard={this.makeBoard}
           modal={modal}
           victory={victory}
+          message={victoryMessage}
           savedView={savedView}
           changeView={this.changeWelcomeView}
           changeVictory={this.changeVictory}

@@ -1,26 +1,27 @@
 import React from 'react';
 
-const Welcome = ({ username, modal, gameList, victory, savedView, changeView, changeVictory, makeBoard, onClose }) => {
+const Welcome = ({ username, modal, gameList, victory, message, savedView, changeView, changeVictory, makeBoard, onClose }) => {
   if (!modal) {
     return null;
   }
-  if (savedView) {
-    if (victory !== '') {
-      return (
-        <div className="modalBackground victoryBackground">
-          <div className="head"><h2>Checkers</h2></div>
-          <div className="formBox">
-            <div>
-              <h1>{`${victory} wins!!!`}</h1>
-            </div>
-            <button className="altButton" type="button" onClick={() => {
-              changeView();
-              changeVictory();
-            }}>Back to Welcome Page</button>
+  if (victory !== '') {
+    return (
+      <div className="modalBackground victoryBackground">
+        <div className="head"><h2>Checkers</h2></div>
+        <div className="formBox">
+          <div>
+            <h1>{`${victory} wins!!!`}</h1>
+            <h3>{message}</h3>
           </div>
+          <button className="altButton" type="button" onClick={() => {
+            changeView();
+            changeVictory();
+          }}>Back to Welcome Page</button>
         </div>
-      );
-    }
+      </div>
+    );
+  }
+  if (savedView) {
     return (
       <div className="modalBackground">
         <div className="head"><h2>Checkers</h2></div>
